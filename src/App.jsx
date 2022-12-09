@@ -1,5 +1,8 @@
+import Game from './Game';
+import RankPage from './RankPage';
+
 function App() {
-  return <div>Hello, MTG</div>;
+  return <Game />;
 }
 
 export default App;
