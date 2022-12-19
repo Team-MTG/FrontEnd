@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
 
 // Create a theme instance.
 const theme = createTheme({
@@ -13,6 +12,7 @@ const theme = createTheme({
           height: '100%',
           maxHeight: '590px',
           display: 'flex',
+          justifyContent: 'center',
         },
       },
     },

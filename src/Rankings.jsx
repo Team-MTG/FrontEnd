@@ -1,56 +1,7 @@
 import { Box, Button, Divider, List, ListItem, ListItemText } from '@mui/material';
 import { useState } from 'react';
-
-const RANKING = [
-  {
-    name: 'hsmroof',
-    rank: 1,
-    profit: 90,
-    total: 90000,
-  },
-  {
-    name: 'hacho',
-    rank: 2,
-    profit: 30,
-    total: 30000,
-  },
-  {
-    name: 'hyeonzii',
-    rank: 3,
-    profit: 20,
-    total: 10000,
-  },
-  {
-    name: 'hyeonzii',
-    rank: 3,
-    profit: 20,
-    total: 10000,
-  },
-  {
-    name: 'hyeonzii',
-    rank: 3,
-    profit: 20,
-    total: 10000,
-  },
-  {
-    name: 'hyeonzii',
-    rank: 3,
-    profit: 20,
-    total: 10000,
-  },
-  {
-    name: 'hyeonzii',
-    rank: 3,
-    profit: 20,
-    total: 10000,
-  },
-  {
-    name: 'hyeonzii',
-    rank: 3,
-    profit: 20,
-    total: 10000,
-  },
-];
+import { useRecoilValue } from 'recoil';
+import { rankingsState } from './atoms/rankings';
 
 function RankItem({ nickName, profit, total, rank }) {
   return (
@@ -64,8 +15,8 @@ function RankItem({ nickName, profit, total, rank }) {
   );
 }
 
-function RankPage() {
-  const [ranks, setRanks] = useState(RANKING);
+function Rankings() {
+  const rankings = useRecoilValue(rankingsState);
 
   return (
     <Box
@@ -90,9 +41,9 @@ function RankPage() {
           overflow: 'auto',
         }}
       >
-        {ranks.map((rank) => (
+        {rankings.map((rank) => (
           <RankItem
-            key={rank.name}
+            key={rank.id}
             rank={rank.rank}
             nickName={rank.name}
             profit={rank.profit}
@@ -116,4 +67,4 @@ function RankPage() {
   );
 }
 
-export default RankPage;
+export default Rankings;

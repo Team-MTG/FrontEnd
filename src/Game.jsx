@@ -1,20 +1,30 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { stockLogListState } from './atoms/stocks';
 import useTimer from './hooks/useTimer';
-// import test2 from './testStock.json';
-import test2 from './test2.json';
 
-const useGame = (sec) => {};
+const useGame = (phaseSec, phaseMax) => {
+  const { time, timeOver, resetTimer } = useTimer(phaseSec, 1000);
+  const [phase, setPhase] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
 
-const useStock = () => {
-  const { time: tick, timeOver: tickEnd } = useTimer(test2.length - 1, 30000 / test2.length);
+  useEffect(() => {
+    if (phase + 1 === phaseMax) {
+      setGameOver(true);
+    }
+  }, [phase]);
 
-  return test2[tick].Close;
+  const setNextPhase = () => {
+    setPhase((prevPhase) => prevPhase + 1);
+    resetTimer();
+  };
+
+  return { time, turnOver: timeOver, phase, setNextPhase, gameOver };
 };
 
-const useUserStatus = (initCash) => {
+const useUser = (initCash) => {
   const [cash, setCash] = useState(initCash);
   const [shareNum, setShareNum] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
@@ -35,17 +45,20 @@ const useUserStatus = (initCash) => {
   return { cash, shareNum, buyPrice, buy, sell };
 };
 
-export default function Game() {
-  const { time, timeOver, resetTimer } = useTimer(30, 1000);
-  const price = useStock();
-  const { cash, shareNum, buyPrice, buy, sell } = useUserStatus(5000000);
+export default function Game({ maxSec, maxPhase }) {
+  const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
+  const stockLogList = useRecoilValue(stockLogListState);
+  const { time: tick, resetTimer: resetTick } = useTimer(
+    stockLogList[phase].length - 1,
+    (maxSec * 1000) / stockLogList[phase].length
+  );
+  const { cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
 
-  if (timeOver === true && shareNum) {
+  const price = stockLogList[phase][tick].Close;
+  const gain = (price - buyPrice) * shareNum;
+  if (turnOver === true && shareNum) {
     sell(price);
   }
-
-  const gain = (price - buyPrice) * shareNum;
-
   return (
     <Box
       sx={{
@@ -58,12 +71,19 @@ export default function Game() {
     >
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography>1/5</Typography>
-          <Typography>00:{30 - time < 10 ? `0${30 - time}` : 30 - time}</Typography>
+          <Typography>
+            {phase + 1}/{maxPhase}
+          </Typography>
+          <Typography>00:{maxSec - time < 10 ? `0${maxSec - time}` : maxSec - time}</Typography>
         </Toolbar>
       </AppBar>
       <Box
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+        }}
       >
         <Box sx={{ marginTop: '20px' }}>
           <Typography>주가</Typography>
@@ -86,15 +106,35 @@ export default function Game() {
           <Typography sx={{ fontSize: '40px' }}>{cash + price * shareNum}</Typography>
         </Box>
       </Box>
-      <Button
-        sx={{ flexGrow: 1 }}
-        variant="contained"
-        onClick={shareNum ? () => sell(price) : () => buy(price)}
-      >
-        <Typography sx={{ fontSize: '40px', margin: '10px' }}>
-          {shareNum ? '매도' : '매수'}
-        </Typography>
-      </Button>
+      {!turnOver ? (
+        <Button
+          sx={{ flexGrow: 1 }}
+          variant="contained"
+          onClick={() => {
+            if (shareNum) sell(price);
+            else buy(price);
+          }}
+        >
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>
+            {shareNum ? '매도' : '매수'}
+          </Typography>
+        </Button>
+      ) : gameOver ? (
+        <Button sx={{ flexGrow: 1 }} variant="contained" onClick={() => {}}>
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>두근두근</Typography>
+        </Button>
+      ) : (
+        <Button
+          sx={{ flexGrow: 1 }}
+          variant="contained"
+          onClick={() => {
+            resetTick();
+            setNextPhase();
+          }}
+        >
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>다음턴!</Typography>
+        </Button>
+      )}
     </Box>
   );
 }

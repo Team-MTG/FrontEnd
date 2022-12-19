@@ -8,9 +8,11 @@ const useTimer = (maxTime, ms) => {
   useEffect(() => {
     intervalId.current = setInterval(() => setTime((prev) => prev + 1), ms);
     return () => {
+      setTime(0);
+      setTimeOver(false);
       clearInterval(intervalId.current);
     };
-  }, []);
+  }, [maxTime, ms]);
 
   useEffect(() => {
     if (time === maxTime) {
