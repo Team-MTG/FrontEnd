@@ -1,10 +1,9 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import { Suspense, useRef } from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { stockLogListState } from './atoms/stocks';
-import { userTradingLogListState } from './atoms/user';
+import { stocksState } from './atoms/stocks';
+import { userNameState, userTradingLogListState } from './atoms/user';
 import useTimer from './hooks/useTimer';
 
 const useGame = (phaseSec, phaseMax) => {
@@ -33,12 +32,6 @@ const useUser = (initCash) => {
   const setUserTradingLogList = useSetRecoilState(userTradingLogListState);
 
   const buy = (price, phase) => {
-    setUserTradingLogList((oldLog) => [
-      ...oldLog,
-      {
-        phase,
-      },
-    ]);
     setBuyPrice(price);
     const remainder = cash % price;
     setShareNum((cash - remainder) / price);
@@ -55,16 +48,17 @@ const useUser = (initCash) => {
 };
 
 export default function Game({ maxSec, maxPhase }) {
+  const navigate = useNavigate();
   const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
-  const stockLogList = useRecoilValue(stockLogListState);
+  const stocks = useRecoilValue(stocksState);
   const { time: tick, resetTimer: resetTick } = useTimer(
-    stockLogList[phase].length - 1,
-    (maxSec * 1000) / stockLogList[phase].length
+    stocks[phase].log.length - 1,
+    (maxSec * 1000) / stocks[phase].log.length
   );
   const { cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
-  const price = stockLogList[phase][tick].Close;
+
+  const price = stocks[phase].log[tick].Close;
   const gain = (price - buyPrice) * shareNum;
-  const navigate = useNavigate();
   if (turnOver === true && shareNum) {
     sell(price);
   }
@@ -83,7 +77,10 @@ export default function Game({ maxSec, maxPhase }) {
           <Typography>
             {phase + 1}/{maxPhase}
           </Typography>
-          <Typography>00:{maxSec - time < 10 ? `0${maxSec - time}` : maxSec - time}</Typography>
+          <Typography>
+            00:{maxSec - time < 10 && '0'}
+            {maxSec - time}
+          </Typography>
         </Toolbar>
       </AppBar>
       <Box
@@ -138,7 +135,9 @@ export default function Game({ maxSec, maxPhase }) {
             });
           }}
         >
-          <Typography sx={{ fontSize: '40px', margin: '10px' }}>두근두근</Typography>
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>
+            {stocks[phase].stockname}
+          </Typography>
         </Button>
       ) : (
         <Button
@@ -149,7 +148,9 @@ export default function Game({ maxSec, maxPhase }) {
             setNextPhase();
           }}
         >
-          <Typography sx={{ fontSize: '40px', margin: '10px' }}>다음턴!</Typography>
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>
+            {stocks[phase].stockname}
+          </Typography>
         </Button>
       )}
     </Box>

@@ -2,9 +2,11 @@ import { Button, TextField, Box, Typography, Modal } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import { useRecoilState } from 'recoil';
+import { userNameState } from './atoms/user';
 
 function MainPage() {
-  const [name, setName] = useState('');
+  const [userName, setUserName] = useRecoilState(userNameState);
   const [num, setNum] = useState(100000);
   //모달 창
   const [open, setOpen] = useState(false);
@@ -16,18 +18,16 @@ function MainPage() {
   }, []);
 
   const handleChange = (e) => {
-    setName(e.target.value);
+    setUserName(e.target.value);
   };
 
   const onClick = () => {
-    console.log(name);
-    if (name === '') {
+    if (userName === '') {
       setOpen(true);
       setTimeout(function () {
         setOpen(false);
       }, 2000); // 2000ms(2초)가 경과하면 이 함수가 실행됩니다.
     } else {
-      setName('');
       navigate('/game');
     }
   };
@@ -74,7 +74,13 @@ function MainPage() {
           alignItems: 'center',
         }}
       >
-        <TextField id="outlined-basic" label="이름" variant="outlined" onChange={handleChange} />
+        <TextField
+          id="outlined-basic"
+          label="이름"
+          variant="outlined"
+          value={userName}
+          onChange={handleChange}
+        />
       </Box>
       <Box
         sx={{

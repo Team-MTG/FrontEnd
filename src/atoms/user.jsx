@@ -1,10 +1,15 @@
 import { atom } from 'recoil';
 
+const userNameState = atom({
+  key: 'userName',
+  default: '',
+});
+export { userNameState };
+
 const userTradingLogListState = atom({
   key: 'userTradingLogList',
   default: [],
 });
-
 export { userTradingLogListState };
 
 /* 
