@@ -29,7 +29,6 @@ function RankItem({ nickName, profit, total, rank }) {
 
 function Rankings() {
   const rankings = useRecoilValue(rankingsState);
-  const [isShare, setIsShare] = useState(false);
 
   //모달 창
   const [open, setOpen] = useState(false);
@@ -56,7 +55,7 @@ function Rankings() {
     setOpen(true);
     setTimeout(function () {
       setOpen(false);
-    }, 2000); // 3000ms(3초)가 경과하면 이 함수가 실행됩니다.
+    }, 2000); // 2000ms(2초)가 경과하면 이 함수가 실행됩니다.
   };
 
   /* 참고: https://abangpa1ace.tistory.com/255 */
