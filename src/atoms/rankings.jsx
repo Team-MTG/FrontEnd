@@ -6,7 +6,7 @@ const rankingsState = atom({
   default: selector({
     key: 'rankings/Default',
     get: async () => {
-      const res = await axios.get(`${import.meta.env.API}/api/rankings`);
+      const res = await axios.get(`${import.meta.env.VITE_API}/api/rankings`);
       const rankings = res.data.rankings;
       return rankings;
     },

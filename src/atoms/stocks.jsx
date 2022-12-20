@@ -7,7 +7,7 @@ const stocksState = atom({
   default: selector({
     key: 'Stocks/Default',
     get: async () => {
-      const res = await axios.get(`${import.meta.env.API}/api/stocks`, {
+      const res = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {
         params: { index: generateRandomNumList(5, 27) },
         paramsSerializer: {
           indexes: null,
