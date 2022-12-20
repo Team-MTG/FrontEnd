@@ -14,6 +14,7 @@ import {
   Modal,
   Typography,
 } from '@mui/material';
+import { nickname } from './atoms/nickname';
 
 function RankItem({ nickName, profit, total, rank }) {
   return (
@@ -35,10 +36,13 @@ function Rankings() {
 
   const navigate = useNavigate();
 
+  //유저이름
+  const username = useRecoilValue(nickname);
+
   //현재 주소 가져옴
   //const url = encodeURI(window.location.href);
   //테스트용으로 가능한 주소인 노션 주소 넣음
-  const url = 'https://www.notion.so/e2de89087a894ccbbd58b8a395ba1355';
+  const url = 'https://mtg-front-end.vercel.app/';
 
   //url 복사
   const copyURL = () => {
@@ -78,7 +82,11 @@ function Rankings() {
 
   //다시하기 버튼 클릭 시
   const Replay = () => {
-    navigate('/game');
+    if (username.nick === 'NoName') {
+      navigate('/');
+    } else {
+      navigate('/game');
+    }
   };
 
   return (
@@ -92,7 +100,7 @@ function Rankings() {
       }}
     >
       <List>
-        <RankItem rank={322} nickName={'조하빈'} profit={23} total={923123} />
+        <RankItem rank={322} nickName={username.nick} profit={23} total={923123} />
       </List>
       <Divider sx={{ width: '100%', maxWidth: '320px' }} />
       <List
