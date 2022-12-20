@@ -1,16 +1,16 @@
-import { CompressOutlined } from '@mui/icons-material';
-import { Button, TextField, Box, Typography } from '@mui/material';
+import { Button, TextField, Box, Typography, Modal } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { nickname } from './atoms/nickname';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import { useRecoilState } from 'recoil';
+import { userNameState } from './atoms/user';
 
 function MainPage() {
-  const [name, setName] = useState('');
+  const [userName, setUserName] = useRecoilState(userNameState);
   const [num, setNum] = useState(100000);
+  //모달 창
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const setNickName = useSetRecoilState(nickname);
-  const username = useRecoilValue(nickname);
 
   useEffect(() => {
     const result = num.toLocaleString('ko-KR');
@@ -18,15 +18,18 @@ function MainPage() {
   }, []);
 
   const handleChange = (e) => {
-    setName(e.target.value);
+    setUserName(e.target.value);
   };
 
   const onClick = () => {
-    if (name != '') {
-      setNickName({ nick: name });
-      setName('');
+    if (userName === '') {
+      setOpen(true);
+      setTimeout(function () {
+        setOpen(false);
+      }, 2000); // 2000ms(2초)가 경과하면 이 함수가 실행됩니다.
+    } else {
+      navigate('/game');
     }
-    navigate('/game');
   };
 
   const navMTG = () => {
@@ -71,7 +74,13 @@ function MainPage() {
           alignItems: 'center',
         }}
       >
-        <TextField id="outlined-basic" label="이름" variant="outlined" onChange={handleChange} />
+        <TextField
+          id="outlined-basic"
+          label="이름"
+          variant="outlined"
+          value={userName}
+          onChange={handleChange}
+        />
       </Box>
       <Box
         sx={{
@@ -121,6 +130,28 @@ function MainPage() {
           <Button onClick={navGit}>Github</Button>
         </Box>
       </Box>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 250,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            borderRadius: '30px',
+            p: 4,
+          }}
+        >
+          <SentimentVeryDissatisfiedIcon sx={{ color: 'red' }} />
+          <Typography id="modal-modal-description">이름을 입력해주십시오.</Typography>
+        </Box>
+      </Modal>
     </Box>
   );
 }

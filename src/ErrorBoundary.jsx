@@ -1,5 +1,4 @@
 import React from 'react';
-
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -8,6 +7,13 @@ class ErrorBoundary extends React.Component {
 
   static getDerivedStateFromError(error) {
     return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    if (this.props.cleanUp != undefined) {
+      console.log('clean!!');
+      this.props.cleanUp();
+    }
   }
 
   render() {

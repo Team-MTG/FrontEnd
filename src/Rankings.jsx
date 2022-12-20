@@ -2,7 +2,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { rankingsState } from './atoms/rankings';
 import {
   Box,
@@ -14,7 +14,7 @@ import {
   Modal,
   Typography,
 } from '@mui/material';
-import { nickname } from './atoms/nickname';
+import { userCashState, userNameState, userRateState } from './atoms/user';
 
 function RankItem({ nickName, profit, total, rank }) {
   return (
@@ -30,24 +30,24 @@ function RankItem({ nickName, profit, total, rank }) {
 
 function Rankings() {
   const rankings = useRecoilValue(rankingsState);
+  const userCash = useRecoilValue(userCashState);
+  const userName = useRecoilValue(userNameState);
+  const userRate = useRecoilValue(userRateState);
 
   //모달 창
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
-  //유저이름
-  const username = useRecoilValue(nickname);
-
   //현재 주소 가져옴
   //const url = encodeURI(window.location.href);
   //테스트용으로 가능한 주소인 노션 주소 넣음
-  const url = 'https://mtg-front-end.vercel.app/';
+  const url = 'https://www.notion.so/e2de89087a894ccbbd58b8a395ba1355';
 
   //url 복사
   const copyURL = () => {
-    var url = ''; // <a>태그에서 호출한 함수인 clip 생성
-    var textarea = document.createElement('textarea');
+    let url = ''; // <a>태그에서 호출한 함수인 clip 생성
+    const textarea = document.createElement('textarea');
     //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
 
     document.body.appendChild(textarea); //</body> 바로 위에 textarea를 추가(임시 공간이라 위치는 상관 없음)
@@ -81,12 +81,8 @@ function Rankings() {
   };
 
   //다시하기 버튼 클릭 시
-  const Replay = () => {
-    if (username.nick === 'NoName') {
-      navigate('/');
-    } else {
-      navigate('/game');
-    }
+  const replay = () => {
+    navigate('/game');
   };
 
   return (
@@ -100,7 +96,12 @@ function Rankings() {
       }}
     >
       <List>
-        <RankItem rank={322} nickName={username.nick} profit={23} total={923123} />
+        <RankItem
+          rank={322}
+          nickName={userName}
+          profit={(userRate * 100).toFixed(2)}
+          total={userCash}
+        />
       </List>
       <Divider sx={{ width: '100%', maxWidth: '320px' }} />
       <List
@@ -131,7 +132,7 @@ function Rankings() {
           display: 'flex',
         }}
       >
-        <Button variant="contained" onClick={Replay}>
+        <Button variant="contained" onClick={replay}>
           다시하기
         </Button>
       </Box>
