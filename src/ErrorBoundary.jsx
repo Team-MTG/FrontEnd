@@ -9,6 +9,13 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
+  componentDidCatch(error, info) {
+    if (this.props.cleanUp != undefined) {
+      console.log('clean!!');
+      this.props.cleanUp();
+    }
+  }
+
   render() {
     if (this.state.hasError) {
       return this.props.fallback;

@@ -3,7 +3,7 @@ import test1 from './test2.json';
 import test2 from './testStock.json';
 
 export const handlers = [
-  rest.get(`${import.meta.env.API}/api/stocks`, (req, res, ctx) => {
+  rest.get(`${import.meta.env.VITE_API}/api/stocks`, (req, res, ctx) => {
     console.log(req);
     return res(
       ctx.delay(1234),
@@ -18,7 +18,7 @@ export const handlers = [
       })
     );
   }),
-  rest.get(`${import.meta.env.API}/api/rankings`, (req, res, ctx) => {
+  rest.get(`${import.meta.env.VITE_API}/api/rankings`, (req, res, ctx) => {
     return res(
       ctx.delay(1323),
       ctx.json({

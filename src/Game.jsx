@@ -1,9 +1,9 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { stocksState } from './atoms/stocks';
-import { userNameState, userTradingLogListState } from './atoms/user';
+import { userCashState, userNameState, userTradingLogListState } from './atoms/user';
 import useTimer from './hooks/useTimer';
 
 const useGame = (phaseSec, phaseMax) => {
@@ -26,7 +26,7 @@ const useGame = (phaseSec, phaseMax) => {
 };
 
 const useUser = (initCash) => {
-  const [cash, setCash] = useState(initCash);
+  const [cash, setCash] = useRecoilState(userCashState);
   const [shareNum, setShareNum] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
   const setUserTradingLogList = useSetRecoilState(userTradingLogListState);
@@ -49,19 +49,27 @@ const useUser = (initCash) => {
 
 export default function Game({ maxSec, maxPhase }) {
   const navigate = useNavigate();
-  const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
   const stocks = useRecoilValue(stocksState);
+  const resetUserCash = useResetRecoilState(userCashState);
+  const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
   const { time: tick, resetTimer: resetTick } = useTimer(
     stocks[phase].log.length - 1,
     (maxSec * 1000) / stocks[phase].log.length
   );
   const { cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
-
   const price = stocks[phase].log[tick].Close;
   const gain = (price - buyPrice) * shareNum;
-  if (turnOver === true && shareNum) {
-    sell(price);
-  }
+
+  useEffect(() => {
+    resetUserCash();
+  }, []);
+
+  useEffect(() => {
+    if (turnOver === true && shareNum) {
+      sell(price);
+    }
+  }, [turnOver, shareNum, sell]);
+
   return (
     <Box
       sx={{
