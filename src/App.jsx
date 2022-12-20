@@ -1,12 +1,13 @@
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Game from './Game';
+import MainPage from './MainPage';
 import Rankings from './Rankings';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<></>} />
+      <Route path="/" element={<MainPage />} />
       <Route
         path="/game"
         element={

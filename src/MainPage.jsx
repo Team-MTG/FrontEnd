@@ -1,12 +1,14 @@
 import { Button, TextField, Box, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function MainPage() {
   const [name, setName] = useState('');
   const [num, setNum] = useState(100000);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    let result = num.toLocaleString('ko-KR');
+    const result = num.toLocaleString('ko-KR');
     setNum(result);
   }, []);
 
@@ -17,6 +19,7 @@ function MainPage() {
   const onClick = () => {
     console.log(name);
     setName('');
+    navigate('/game');
   };
 
   const navMTG = () => {
@@ -63,7 +66,6 @@ function MainPage() {
       >
         <TextField id="outlined-basic" label="이름" variant="outlined" onChange={handleChange} />
       </Box>
-
       <Box
         sx={{
           marginTop: '30px',

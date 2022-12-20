@@ -1,8 +1,10 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { Suspense, useRef } from 'react';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { stockLogListState } from './atoms/stocks';
+import { userTradingLogListState } from './atoms/user';
 import useTimer from './hooks/useTimer';
 
 const useGame = (phaseSec, phaseMax) => {
@@ -28,8 +30,15 @@ const useUser = (initCash) => {
   const [cash, setCash] = useState(initCash);
   const [shareNum, setShareNum] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
+  const setUserTradingLogList = useSetRecoilState(userTradingLogListState);
 
-  const buy = (price) => {
+  const buy = (price, phase) => {
+    setUserTradingLogList((oldLog) => [
+      ...oldLog,
+      {
+        phase,
+      },
+    ]);
     setBuyPrice(price);
     const remainder = cash % price;
     setShareNum((cash - remainder) / price);
@@ -53,9 +62,9 @@ export default function Game({ maxSec, maxPhase }) {
     (maxSec * 1000) / stockLogList[phase].length
   );
   const { cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
-
   const price = stockLogList[phase][tick].Close;
   const gain = (price - buyPrice) * shareNum;
+  const navigate = useNavigate();
   if (turnOver === true && shareNum) {
     sell(price);
   }
@@ -120,7 +129,15 @@ export default function Game({ maxSec, maxPhase }) {
           </Typography>
         </Button>
       ) : gameOver ? (
-        <Button sx={{ flexGrow: 1 }} variant="contained" onClick={() => {}}>
+        <Button
+          sx={{ flexGrow: 1 }}
+          variant="contained"
+          onClick={() => {
+            navigate('/rankings', {
+              replace: true,
+            });
+          }}
+        >
           <Typography sx={{ fontSize: '40px', margin: '10px' }}>두근두근</Typography>
         </Button>
       ) : (

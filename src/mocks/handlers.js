@@ -5,7 +5,7 @@ import test2 from './testStock.json';
 export const handlers = [
   rest.get('/api/stocks', (req, res, ctx) => {
     return res(
-      ctx.delay(1500),
+      ctx.delay(1234),
       ctx.json({
         stocks: [test1, test2],
       })

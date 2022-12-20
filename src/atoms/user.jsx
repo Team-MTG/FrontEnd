@@ -1,9 +1,11 @@
 import { atom } from 'recoil';
 
-const userTradingLogList = atom({
+const userTradingLogListState = atom({
   key: 'userTradingLogList',
   default: [],
 });
+
+export { userTradingLogListState };
 
 /* 
 [
