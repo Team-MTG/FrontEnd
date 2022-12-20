@@ -1,10 +1,13 @@
-import { Button, TextField, Box, Typography } from '@mui/material';
+import { Button, TextField, Box, Typography, Modal } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 
 function MainPage() {
   const [name, setName] = useState('');
   const [num, setNum] = useState(100000);
+  //모달 창
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,8 +21,15 @@ function MainPage() {
 
   const onClick = () => {
     console.log(name);
-    setName('');
-    navigate('/game');
+    if (name === '') {
+      setOpen(true);
+      setTimeout(function () {
+        setOpen(false);
+      }, 2000); // 2000ms(2초)가 경과하면 이 함수가 실행됩니다.
+    } else {
+      setName('');
+      navigate('/game');
+    }
   };
 
   const navMTG = () => {
@@ -114,6 +124,28 @@ function MainPage() {
           <Button onClick={navGit}>Github</Button>
         </Box>
       </Box>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 250,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            borderRadius: '30px',
+            p: 4,
+          }}
+        >
+          <SentimentVeryDissatisfiedIcon sx={{ color: 'red' }} />
+          <Typography id="modal-modal-description">이름을 입력해주십시오.</Typography>
+        </Box>
+      </Modal>
     </Box>
   );
 }
