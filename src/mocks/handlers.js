@@ -7,7 +7,7 @@ export const handlers = [
     return res(
       ctx.delay(1234),
       ctx.json({
-        stocks: [test1, test2],
+        stocks: [test1, test2, test1, test2, test1],
       })
     );
   }),

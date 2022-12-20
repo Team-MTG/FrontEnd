@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import App from './App';
+import ErrorBoundary from './ErrorBoundary';
 import { worker } from './mocks/browser';
 import theme from './theme';
 
