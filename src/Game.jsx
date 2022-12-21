@@ -1,4 +1,5 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
@@ -59,6 +60,20 @@ export default function Game({ maxSec, maxPhase }) {
   const { cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
   const price = stocks[phase].log[tick].Close;
   const gain = (price - buyPrice) * shareNum;
+
+  //게임 끝난 후 화면 넘어가기 전에 값 넘겨줌
+  const setProfit = (money) => {
+    axios
+      .post(`${import.meta.env.VITE_API}/api/profit`, { profit: money })
+      .then((res) => {
+        if (res.isSuccess) {
+          console.log(res.isSuccess);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   useEffect(() => {
     resetUserCash();
@@ -138,6 +153,8 @@ export default function Game({ maxSec, maxPhase }) {
           sx={{ flexGrow: 1 }}
           variant="contained"
           onClick={() => {
+            console.log(cash + price * shareNum);
+            setProfit(cash + price * shareNum);
             navigate('/rankings', {
               replace: true,
             });
