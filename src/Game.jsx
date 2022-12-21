@@ -61,10 +61,16 @@ export default function Game({ maxSec, maxPhase }) {
   const price = stocks[phase].log[tick].Close;
   const gain = (price - buyPrice) * shareNum;
 
+  const userName = useRecoilValue(userNameState);
+
   //게임 끝난 후 화면 넘어가기 전에 값 넘겨줌
-  const setProfit = (money) => {
+  const setProfit = (total, rate) => {
     axios
-      .post(`${import.meta.env.VITE_API}/api/profit`, { profit: money })
+      .post(`${import.meta.env.VITE_API}/api/rankings`, {
+        name: userName,
+        totalCash: total,
+        rate: rate,
+      })
       .then((res) => {
         if (res.isSuccess) {
           console.log(res.isSuccess);
@@ -154,7 +160,7 @@ export default function Game({ maxSec, maxPhase }) {
           variant="contained"
           onClick={() => {
             console.log(cash + price * shareNum);
-            setProfit(cash + price * shareNum);
+            setProfit(cash + price * shareNum, ((cash + price * shareNum - cash) / cash) * 100);
             navigate('/rankings', {
               replace: true,
             });
