@@ -19,7 +19,7 @@ const useTimer = (maxTime, ms) => {
       setTimeOver(true);
       clearInterval(intervalId.current);
     }
-  }, [time]);
+  }, [time, maxTime, setTimeOver]);
 
   const resetTimer = () => {
     setTime(0);

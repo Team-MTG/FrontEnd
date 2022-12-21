@@ -10,10 +10,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    if (this.props.cleanUp != undefined) {
-      console.log('clean!!');
-      this.props.cleanUp();
-    }
+    this.props.cleanUp?.();
   }
 
   render() {

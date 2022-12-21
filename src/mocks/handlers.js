@@ -2,6 +2,16 @@ import { rest } from 'msw';
 import test1 from './test2.json';
 import test2 from './testStock.json';
 
+const RANKINGS = [
+  {
+    userId: '1234',
+    name: 'hello',
+    rank: 1,
+    rate: 0.3,
+    totalCash: 9999,
+  },
+];
+
 export const handlers = [
   rest.get(`${import.meta.env.VITE_API}/api/stocks`, (req, res, ctx) => {
     console.log(req);
@@ -18,68 +28,31 @@ export const handlers = [
       })
     );
   }),
+  rest.post(`${import.meta.env.VITE_API}/api/rankings`, async (req, res, ctx) => {
+    const { name, totalCash, rate } = await req.json();
+    RANKINGS.push({
+      userId: RANKINGS.length + 1,
+      name,
+      rank: RANKINGS.length + 1,
+      rate,
+      totalCash,
+    });
+    return res(
+      ctx.delay(2000),
+      ctx.json({
+        userId: RANKINGS.length,
+        name,
+        rank: RANKINGS.length,
+        rate,
+        totalCash,
+      })
+    );
+  }),
   rest.get(`${import.meta.env.VITE_API}/api/rankings`, (req, res, ctx) => {
     return res(
       ctx.delay(1323),
       ctx.json({
-        rankings: [
-          {
-            id: '123',
-            name: 'hsmroof',
-            rank: 1,
-            profit: 90,
-            total: 90000,
-          },
-          {
-            id: '124',
-            name: 'hacho',
-            rank: 2,
-            profit: 30,
-            total: 30000,
-          },
-          {
-            id: '125',
-            name: 'hyeonzii',
-            rank: 3,
-            profit: 20,
-            total: 10000,
-          },
-          {
-            id: '126',
-            name: 'hyeonzii',
-            rank: 4,
-            profit: 20,
-            total: 10000,
-          },
-          {
-            id: '127',
-            name: 'hyeonzii',
-            rank: 5,
-            profit: 20,
-            total: 10000,
-          },
-          {
-            id: '128',
-            name: 'hyeonzii',
-            rank: 6,
-            profit: 20,
-            total: 10000,
-          },
-          {
-            id: '129',
-            name: 'hyeonzii',
-            rank: 7,
-            profit: 20,
-            total: 10000,
-          },
-          {
-            id: '130',
-            name: 'hyeonzii',
-            rank: 8,
-            profit: 20,
-            total: 10000,
-          },
-        ],
+        rankings: RANKINGS,
       })
     );
   }),

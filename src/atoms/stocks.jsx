@@ -1,21 +1,20 @@
 import axios from 'axios';
-import { atom, selector } from 'recoil';
+import { atom, selector, selectorFamily } from 'recoil';
 import { generateRandomNumList } from '../utils/random';
 
-const stocksState = atom({
-  key: 'Stocks',
-  default: selector({
-    key: 'Stocks/Default',
-    get: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {
-        params: { index: generateRandomNumList(5, 27) },
-        paramsSerializer: {
-          indexes: null,
-        },
-      });
-      return res.data.stocks;
-    },
-  }),
+const stocksState = selectorFamily({
+  key: 'stocksState',
+  get: (stocksNumber) => async () => {
+    const {
+      data: { stocks },
+    } = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {
+      params: { index: generateRandomNumList(stocksNumber, 27) },
+      paramsSerializer: {
+        indexes: null,
+      },
+    });
+    return stocks;
+  },
 });
 
 export { stocksState };
