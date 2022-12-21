@@ -1,10 +1,16 @@
 import { atom, selector } from 'recoil';
 
 const userNameState = atom({
-  key: 'userName',
+  key: 'userNameState',
   default: '',
 });
 export { userNameState };
+
+const userRankState = atom({
+  key: 'userRankState',
+  default: 0,
+});
+export { userRankState };
 
 const userCashState = atom({
   key: 'userCashState',
@@ -16,7 +22,6 @@ const userRateState = selector({
   key: 'userRateState',
   get: ({ get }) => {
     const userCash = get(userCashState);
-    // if (userCash > 5000000) {
     return userCash / 5000000 - 1;
   },
 });
