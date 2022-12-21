@@ -15,13 +15,24 @@ import {
   Typography,
 } from '@mui/material';
 import { userCashState, userNameState, userRateState } from './atoms/user';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 
 function RankItem({ nickName, profit, total, rank }) {
   return (
     <ListItem sx={{ width: '320px' }} disablePadding={true} component="a">
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
         <ListItemText sx={{ marginRight: '20px' }} primary={`${rank}등`} />
-        <ListItemText primary={nickName} secondary={`${profit} %`} />
+        {rank < 4 ? (
+          <Box sx={{ color: 'rgb(81,210,94)', display: 'flex' }}>
+            <MilitaryTechIcon sx={{ mt: '13%' }} />
+            <ListItemText primary={nickName} secondary={`${profit} %`} />
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex' }}>
+            <MilitaryTechIcon sx={{ visibility: 'hidden' }} />
+            <ListItemText primary={nickName} secondary={`${profit} %`} />
+          </Box>
+        )}
       </Box>
       <ListItemText sx={{ display: 'flex', justifyContent: 'flex-end' }} primary={`${total} KRW`} />
     </ListItem>
@@ -93,6 +104,7 @@ function Rankings() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: '10px',
       }}
     >
       <List>
