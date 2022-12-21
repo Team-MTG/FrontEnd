@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useResetRecoilState } from 'recoil';
 import { userCashState, userNameState } from './atoms/user';
+import { MAX_PHASE, MAX_SEC } from './config';
 import Error from './Error';
 import ErrorBoundary from './ErrorBoundary';
 import Game from './Game';
@@ -34,7 +35,7 @@ function App() {
             cleanUp={cleanUp}
           >
             <Suspense fallback={<Loading msg="주식 정보를 가져오는 중..." />}>
-              <Game maxSec={30} maxPhase={1} />
+              <Game maxSec={MAX_SEC} maxPhase={MAX_PHASE} />
             </Suspense>
           </ErrorBoundary>
         }
@@ -64,7 +65,6 @@ function App() {
           </ErrorBoundary>
         }
       />
-      <Route path="dev" element={<Result />} />
     </Routes>
   );
 }

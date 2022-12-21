@@ -1,8 +1,8 @@
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ShareIcon from '@mui/icons-material/Share';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { rankingsState } from './atoms/rankings';
 import {
   Box,

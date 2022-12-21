@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
+import { SEED_MONEY } from '../config';
 import { gameOverState } from './game';
 
 const userNameState = atom({
@@ -21,7 +22,6 @@ const userRankState = atom({
         totalCash: get(userCashState),
         rate: get(userRateState) * 100,
       });
-      console.log(res);
       return res.data.rank;
     },
   }),
@@ -30,7 +30,7 @@ export { userRankState };
 
 const userCashState = atom({
   key: 'userCashState',
-  default: 5000000,
+  default: SEED_MONEY,
 });
 export { userCashState };
 
@@ -38,7 +38,7 @@ const userRateState = selector({
   key: 'userRateState',
   get: ({ get }) => {
     const userCash = get(userCashState);
-    return userCash / 5000000 - 1;
+    return userCash / SEED_MONEY - 1;
   },
 });
 export { userRateState };

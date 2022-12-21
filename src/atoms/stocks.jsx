@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { atom, selector, selectorFamily } from 'recoil';
+import { selectorFamily } from 'recoil';
 import { generateRandomNumList } from '../utils/random';
 
 const stocksState = selectorFamily({

@@ -13,11 +13,11 @@ const RANKINGS = [
 
 export const handlers = [
   rest.get(`${import.meta.env.VITE_API}/api/stocks`, (req, res, ctx) => {
-    console.log(req);
     return req.passthrough();
     return res(ctx.delay(1234), ctx.json([naver, naver, naver, naver, naver, naver]));
   }),
   rest.post(`${import.meta.env.VITE_API}/api/rankings`, async (req, res, ctx) => {
+    return req.passthrough();
     const { name, totalCash, rate } = await req.json();
     RANKINGS.push({
       userId: RANKINGS.length + 1,

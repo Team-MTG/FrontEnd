@@ -1,17 +1,11 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import axios from 'axios';
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { gameOverState } from './atoms/game';
 import { stocksState } from './atoms/stocks';
-import {
-  userCashState,
-  userNameState,
-  userRankState,
-  userRateState,
-  userTradingLogListState,
-} from './atoms/user';
+import { userCashState, userTradingLogListState } from './atoms/user';
+import { SEED_MONEY } from './config';
 import useTimer from './hooks/useTimer';
 
 const useGame = (phaseSec, phaseMax) => {
@@ -34,7 +28,6 @@ const useGame = (phaseSec, phaseMax) => {
 };
 
 const useUser = (initCash) => {
-  const userName = useRecoilValue(userNameState);
   const [cash, setCash] = useRecoilState(userCashState);
   const [shareNum, setShareNum] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
@@ -56,7 +49,7 @@ const useUser = (initCash) => {
     [shareNum]
   );
 
-  return { userName, cash, shareNum, buyPrice, buy, sell };
+  return { cash, shareNum, buyPrice, buy, sell };
 };
 
 export default function Game({ maxSec, maxPhase }) {
@@ -64,32 +57,14 @@ export default function Game({ maxSec, maxPhase }) {
   const stocks = useRecoilValue(stocksState(maxPhase));
   const resetUserCash = useResetRecoilState(userCashState);
   const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
-  const [phaseStartCash, setPhaseStartCash] = useState(5000000);
+  const [phaseStartCash, setPhaseStartCash] = useState(SEED_MONEY);
   const { time: tick, resetTimer: resetTick } = useTimer(
     stocks[phase].datas.length - 1,
     (maxSec * 1000) / stocks[phase].datas.length
   );
-  const { userName, cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
+  const { cash, shareNum, buyPrice, buy, sell } = useUser(SEED_MONEY);
   const price = stocks[phase].datas[tick].price;
   const gain = (price - buyPrice) * shareNum;
-
-  //게임 끝난 후 화면 넘어가기 전에 값 넘겨줌
-  const setProfit = (total, rate) => {
-    axios
-      .post(`${import.meta.env.VITE_API}/api/rankings`, {
-        name: userName,
-        totalCash: total,
-        rate: rate,
-      })
-      .then((res) => {
-        if (res.isSuccess) {
-          console.log(res.isSuccess);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
 
   useEffect(() => {
     resetUserCash();
