@@ -74,6 +74,24 @@ export default function Game({ maxSec, maxPhase }) {
   const price = stocks[phase].log[tick].Close;
   const gain = (price - buyPrice) * shareNum;
 
+  //게임 끝난 후 화면 넘어가기 전에 값 넘겨줌
+  const setProfit = (total, rate) => {
+    axios
+      .post(`${import.meta.env.VITE_API}/api/rankings`, {
+        name: userName,
+        totalCash: total,
+        rate: rate,
+      })
+      .then((res) => {
+        if (res.isSuccess) {
+          console.log(res.isSuccess);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   useEffect(() => {
     resetUserCash();
   }, []);
@@ -165,19 +183,21 @@ export default function Game({ maxSec, maxPhase }) {
           </Typography>
         </Button>
       ) : gameOver ? (
-        <Suspense fallback={<div>loading...</div>}>
-          <Button
-            sx={{ flexGrow: 1 }}
-            variant="contained"
-            onClick={() => {
-              navigate('/rankings', {
-                replace: true,
-              });
-            }}
-          >
-            <Typography sx={{ fontSize: '40px', margin: '10px' }}>랭킹확인!</Typography>
-          </Button>
-        </Suspense>
+        <Button
+          sx={{ flexGrow: 1 }}
+          variant="contained"
+          onClick={() => {
+            console.log(cash + price * shareNum);
+            setProfit(cash, (cash / 5000000 - 1) * 100);
+            navigate('/rankings', {
+              replace: true,
+            });
+          }}
+        >
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>
+            {stocks[phase].stockname}
+          </Typography>
+        </Button>
       ) : (
         <Button
           sx={{ flexGrow: 1 }}

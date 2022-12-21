@@ -56,4 +56,12 @@ export const handlers = [
       })
     );
   }),
+  rest.post(`${import.meta.env.VITE_API}/api/rankings`, (req, res, ctx) => {
+    console.log(req);
+    return res(
+      ctx.json({
+        isSuccess: true,
+      })
+    );
+  }),
 ];
