@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { gameOverState } from './atoms/game';
 import { stocksState } from './atoms/stocks';
 import {
   userCashState,
@@ -16,7 +17,7 @@ import useTimer from './hooks/useTimer';
 const useGame = (phaseSec, phaseMax) => {
   const { time, timeOver, resetTimer } = useTimer(phaseSec, 1000);
   const [phase, setPhase] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useRecoilState(gameOverState);
 
   useEffect(() => {
     if (phase + 1 === phaseMax) {
@@ -34,7 +35,6 @@ const useGame = (phaseSec, phaseMax) => {
 
 const useUser = (initCash) => {
   const userName = useRecoilValue(userNameState);
-  const totalRate = useRecoilValue(userRateState);
   const [cash, setCash] = useRecoilState(userCashState);
   const [shareNum, setShareNum] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
@@ -56,22 +56,21 @@ const useUser = (initCash) => {
     [shareNum]
   );
 
-  return { userName, totalRate, cash, shareNum, buyPrice, buy, sell };
+  return { userName, cash, shareNum, buyPrice, buy, sell };
 };
 
 export default function Game({ maxSec, maxPhase }) {
   const navigate = useNavigate();
   const stocks = useRecoilValue(stocksState(maxPhase));
-  const setUserRank = useSetRecoilState(userRankState);
   const resetUserCash = useResetRecoilState(userCashState);
   const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
   const [phaseStartCash, setPhaseStartCash] = useState(5000000);
   const { time: tick, resetTimer: resetTick } = useTimer(
-    stocks[phase].log.length - 1,
-    (maxSec * 1000) / stocks[phase].log.length
+    stocks[phase].datas.length - 1,
+    (maxSec * 1000) / stocks[phase].datas.length
   );
-  const { userName, totalRate, cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
-  const price = stocks[phase].log[tick].Close;
+  const { userName, cash, shareNum, buyPrice, buy, sell } = useUser(5000000);
+  const price = stocks[phase].datas[tick].price;
   const gain = (price - buyPrice) * shareNum;
 
   //게임 끝난 후 화면 넘어가기 전에 값 넘겨줌
@@ -135,7 +134,7 @@ export default function Game({ maxSec, maxPhase }) {
         {turnOver ? (
           <>
             <Box sx={{ marginTop: '20px' }}>
-              <Typography sx={{ fontSize: '40px' }}>{stocks[phase].stockname}</Typography>
+              <Typography sx={{ fontSize: '40px' }}>{stocks[phase].stockName}</Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>수익률</Typography>
@@ -173,10 +172,7 @@ export default function Game({ maxSec, maxPhase }) {
         <Button
           sx={{ flexGrow: 1 }}
           variant="contained"
-          onClick={() => {
-            if (shareNum) sell(price);
-            else buy(price);
-          }}
+          onClick={() => (shareNum ? sell(price) : buy(price))}
         >
           <Typography sx={{ fontSize: '40px', margin: '10px' }}>
             {shareNum ? '매도' : '매수'}
@@ -187,15 +183,13 @@ export default function Game({ maxSec, maxPhase }) {
           sx={{ flexGrow: 1 }}
           variant="contained"
           onClick={() => {
-            console.log(cash + price * shareNum);
-            setProfit(cash, (cash / 5000000 - 1) * 100);
-            navigate('/rankings', {
+            navigate('/result', {
               replace: true,
             });
           }}
         >
           <Typography sx={{ fontSize: '40px', margin: '10px' }}>
-            {stocks[phase].stockname}
+            {stocks[phase].stockName}
           </Typography>
         </Button>
       ) : (

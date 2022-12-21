@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { atom, selector } from 'recoil';
+import { gameOverState } from './game';
 
 const userNameState = atom({
   key: 'userNameState',
@@ -8,7 +10,20 @@ export { userNameState };
 
 const userRankState = atom({
   key: 'userRankState',
-  default: 0,
+  default: selector({
+    key: 'userRankState/Default',
+    get: async ({ get }) => {
+      if (get(gameOverState) === false) {
+        return 0;
+      }
+      const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, {
+        name: get(userNameState),
+        totalCash: get(userCashState),
+        rate: get(userRateState),
+      });
+      return res.data.rank;
+    },
+  }),
 });
 export { userRankState };
 

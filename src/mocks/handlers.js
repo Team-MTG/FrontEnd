@@ -1,6 +1,5 @@
 import { rest } from 'msw';
-import test1 from './test2.json';
-import test2 from './testStock.json';
+import naver from './naver.json';
 
 const RANKINGS = [
   {
@@ -18,13 +17,7 @@ export const handlers = [
     return res(
       ctx.delay(1234),
       ctx.json({
-        stocks: [
-          { stockname: '삼성전자', log: test1 },
-          { stockname: '현대차', log: test2 },
-          { stockname: '엘지', log: test2 },
-          { stockname: '테슬라', log: test1 },
-          { stockname: '뿅', log: test2 },
-        ],
+        stocks: [naver, naver, naver, naver, naver, naver],
       })
     );
   }),

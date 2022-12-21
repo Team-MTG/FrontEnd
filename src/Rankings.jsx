@@ -1,8 +1,8 @@
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ShareIcon from '@mui/icons-material/Share';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { rankingsState } from './atoms/rankings';
 import {
   Box,
@@ -14,7 +14,7 @@ import {
   Modal,
   Typography,
 } from '@mui/material';
-import { userCashState, userNameState, userRateState } from './atoms/user';
+import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 
 function RankItem({ nickName, profit, total, rank }) {
@@ -109,7 +109,7 @@ function Rankings() {
     >
       <List>
         <RankItem
-          rank={322}
+          rank={123}
           nickName={userName}
           profit={(userRate * 100).toFixed(2)}
           total={userCash}
@@ -127,11 +127,11 @@ function Rankings() {
       >
         {rankings.map((rank) => (
           <RankItem
-            key={rank.id}
+            key={rank.userId}
             rank={rank.rank}
             nickName={rank.name}
-            profit={rank.profit}
-            total={rank.total}
+            profit={rank.rate.toFixed(2)}
+            total={rank.totalCash}
           />
         ))}
       </List>
