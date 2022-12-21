@@ -188,9 +188,7 @@ export default function Game({ maxSec, maxPhase }) {
             });
           }}
         >
-          <Typography sx={{ fontSize: '40px', margin: '10px' }}>
-            {stocks[phase].stockName}
-          </Typography>
+          <Typography sx={{ fontSize: '40px', margin: '10px' }}>결과보기</Typography>
         </Button>
       ) : (
         <Button

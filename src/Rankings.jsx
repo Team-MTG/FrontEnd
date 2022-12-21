@@ -44,6 +44,7 @@ function Rankings() {
   const userCash = useRecoilValue(userCashState);
   const userName = useRecoilValue(userNameState);
   const userRate = useRecoilValue(userRateState);
+  const userRank = useRecoilValue(userRankState);
 
   //모달 창
   const [open, setOpen] = useState(false);
@@ -109,7 +110,7 @@ function Rankings() {
     >
       <List>
         <RankItem
-          rank={123}
+          rank={userRank}
           nickName={userName}
           profit={(userRate * 100).toFixed(2)}
           total={userCash}

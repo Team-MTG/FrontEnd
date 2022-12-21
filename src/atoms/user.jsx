@@ -19,8 +19,9 @@ const userRankState = atom({
       const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, {
         name: get(userNameState),
         totalCash: get(userCashState),
-        rate: get(userRateState),
+        rate: get(userRateState) * 100,
       });
+      console.log(res);
       return res.data.rank;
     },
   }),

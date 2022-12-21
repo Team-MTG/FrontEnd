@@ -34,7 +34,7 @@ function App() {
             cleanUp={cleanUp}
           >
             <Suspense fallback={<Loading msg="주식 정보를 가져오는 중..." />}>
-              <Game maxSec={3} maxPhase={5} />
+              <Game maxSec={30} maxPhase={1} />
             </Suspense>
           </ErrorBoundary>
         }
