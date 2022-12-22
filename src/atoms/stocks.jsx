@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { selectorFamily } from 'recoil';
-import { generateRandomNumList } from '../utils/random';
 
 const stocksState = selectorFamily({
   key: 'stocksState',
-  get: (stocksNumber) => async () => {
+  get: (stockIndexesList) => async () => {
     const { data: stocks } = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {
-      params: { index: generateRandomNumList(stocksNumber, 27) },
+      params: { index: stockIndexesList },
       paramsSerializer: {
         indexes: null,
       },

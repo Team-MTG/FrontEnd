@@ -7,6 +7,7 @@ import { stocksState } from './atoms/stocks';
 import { userCashState, userTradingLogListState } from './atoms/user';
 import { SEED_MONEY } from './config';
 import useTimer from './hooks/useTimer';
+import { generateRandomNumList } from './utils/random';
 
 const useGame = (phaseSec, phaseMax) => {
   const { time, timeOver, resetTimer } = useTimer(phaseSec, 1000);
@@ -33,7 +34,7 @@ const useUser = (initCash) => {
   const [buyPrice, setBuyPrice] = useState(0);
   const setUserTradingLogList = useSetRecoilState(userTradingLogListState);
 
-  const buy = (price, phase) => {
+  const buy = (price) => {
     setBuyPrice(price);
     const remainder = cash % price;
     setShareNum((cash - remainder) / price);
@@ -54,7 +55,7 @@ const useUser = (initCash) => {
 
 export default function Game({ maxSec, maxPhase }) {
   const navigate = useNavigate();
-  const stocks = useRecoilValue(stocksState(maxPhase));
+  const stocks = useRecoilValue(stocksState(generateRandomNumList(maxPhase, 27)));
   const resetUserCash = useResetRecoilState(userCashState);
   const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
   const [phaseStartCash, setPhaseStartCash] = useState(SEED_MONEY);
