@@ -35,10 +35,12 @@ const useUser = (initCash) => {
   const setUserTradingLogList = useSetRecoilState(userTradingLogListState);
 
   const buy = (price) => {
-    setBuyPrice(price);
-    const remainder = cash % price;
-    setShareNum((cash - remainder) / price);
-    setCash(remainder);
+    if (cash > price) {
+      setBuyPrice(price);
+      const remainder = cash % price;
+      setShareNum((cash - remainder) / price);
+      setCash(remainder);
+    }
   };
 
   const sell = useCallback(
