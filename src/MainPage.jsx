@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import { useRecoilState } from 'recoil';
 import { userNameState } from './atoms/user';
+import { generateRandomNumList } from './utils/random';
+import { MAX_PHASE, STOCKS_NUMBER } from './config';
 
 function MainPage() {
   const [userName, setUserName] = useRecoilState(userNameState);
@@ -28,7 +30,11 @@ function MainPage() {
         setOpen(false);
       }, 2000); // 2000ms(2초)가 경과하면 이 함수가 실행됩니다.
     } else {
-      navigate('/game');
+      navigate('/game', {
+        state: {
+          stockIndexList: generateRandomNumList(MAX_PHASE, STOCKS_NUMBER),
+        },
+      });
     }
   };
 

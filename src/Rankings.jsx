@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import { generateRandomNumList } from './utils/random';
+import { MAX_PHASE } from './config';
 
 function RankItem({ nickName, profit, total, rank }) {
   return (
@@ -34,7 +36,10 @@ function RankItem({ nickName, profit, total, rank }) {
           </Box>
         )}
       </Box>
-      <ListItemText sx={{ display: 'flex', justifyContent: 'flex-end' }} primary={`${total} KRW`} />
+      <ListItemText
+        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+        primary={`${total.toLocaleString('ko-KR')}원`}
+      />
     </ListItem>
   );
 }
@@ -94,7 +99,11 @@ function Rankings() {
 
   //다시하기 버튼 클릭 시
   const replay = () => {
-    navigate('/game');
+    navigate('/game', {
+      state: {
+        stockIndexList: generateRandomNumList(MAX_PHASE, 27),
+      },
+    });
   };
 
   return (
@@ -128,7 +137,7 @@ function Rankings() {
       >
         {rankings.map((rank) => (
           <RankItem
-            key={rank.userId}
+            key={rank.id}
             rank={rank.rank}
             nickName={rank.name}
             profit={rank.rate.toFixed(2)}

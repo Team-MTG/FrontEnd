@@ -31,19 +31,19 @@ const Result = () => {
         <Typography>
           시드머니
           <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {`${SEED_MONEY}`}
+            {`${SEED_MONEY.toLocaleString('ko-KR')}`}
           </Typography>
         </Typography>
         <Typography>
           평가손익
           <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {userCash - SEED_MONEY}
+            {(userCash - SEED_MONEY).toLocaleString('ko-KR')}
           </Typography>
         </Typography>
         <Typography>
           잔고평가
           <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {userCash}
+            {userCash.toLocaleString('ko-KR')}
           </Typography>
         </Typography>
         <Typography>

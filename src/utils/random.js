@@ -6,7 +6,7 @@ const generateRandomNumList = (len, bound) => {
     while (randSet.has(rand)) {
       rand = Math.floor(Math.random() * bound);
     }
-    rands.push(rand);
+    rands[i] = rand;
     randSet.add(rand);
   }
   return rands;

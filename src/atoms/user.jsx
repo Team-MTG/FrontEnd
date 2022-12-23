@@ -14,8 +14,8 @@ const userRankState = atom({
   default: selector({
     key: 'userRankState/Default',
     get: async ({ get }) => {
-      if (get(gameOverState) === false) {
-        return 0;
+      if (get(gameOverState) === false || get(userNameState) === '') {
+        throw new Error('비정상적인 Ranking 등록');
       }
       const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, {
         name: get(userNameState),

@@ -1,10 +1,10 @@
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { gameOverState } from './atoms/game';
 import { stocksState } from './atoms/stocks';
-import { userCashState, userTradingLogListState } from './atoms/user';
+import { userCashState, userNameState, userTradingLogListState } from './atoms/user';
 import { SEED_MONEY } from './config';
 import useTimer from './hooks/useTimer';
 import { generateRandomNumList } from './utils/random';
@@ -28,8 +28,22 @@ const useGame = (phaseSec, phaseMax) => {
   return { time, turnOver: timeOver, phase, setNextPhase, gameOver };
 };
 
+const useStocks = (maxPhase) => {
+  const [indexList, setIndexList] = useState([]);
+
+  useEffect(() => {
+    const randList = generateRandomNumList(maxPhase, 27);
+    setIndexList(randList);
+  }, []);
+  const stocks = useRecoilValue(stocksState(indexList));
+  console.log('why??');
+
+  return stocks;
+};
+
 const useUser = (initCash) => {
   const [cash, setCash] = useRecoilState(userCashState);
+  const userName = useRecoilValue(userNameState);
   const [shareNum, setShareNum] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
   const setUserTradingLogList = useSetRecoilState(userTradingLogListState);
@@ -52,25 +66,28 @@ const useUser = (initCash) => {
     [shareNum]
   );
 
-  return { cash, shareNum, buyPrice, buy, sell };
+  return { userName, cash, shareNum, buyPrice, buy, sell };
 };
 
 export default function Game({ maxSec, maxPhase }) {
   const navigate = useNavigate();
-  const stocks = useRecoilValue(stocksState(generateRandomNumList(maxPhase, 27)));
+  const location = useLocation();
+  const stocks = useRecoilValue(stocksState(location.state.stockIndexList));
   const resetUserCash = useResetRecoilState(userCashState);
+  const resetGameOver = useResetRecoilState(gameOverState);
   const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
   const [phaseStartCash, setPhaseStartCash] = useState(SEED_MONEY);
   const { time: tick, resetTimer: resetTick } = useTimer(
     stocks[phase].datas.length - 1,
     (maxSec * 1000) / stocks[phase].datas.length
   );
-  const { cash, shareNum, buyPrice, buy, sell } = useUser(SEED_MONEY);
+  const { userName, cash, shareNum, buyPrice, buy, sell } = useUser(SEED_MONEY);
   const price = stocks[phase].datas[tick].price;
   const gain = (price - buyPrice) * shareNum;
 
   useEffect(() => {
     resetUserCash();
+    resetGameOver();
   }, []);
 
   useEffect(() => {
@@ -94,6 +111,7 @@ export default function Game({ maxSec, maxPhase }) {
           <Typography>
             {phase + 1}/{maxPhase}
           </Typography>
+          <Typography>{userName}</Typography>
           <Typography>
             00:{maxSec - time < 10 && '0'}
             {maxSec - time}
@@ -117,7 +135,7 @@ export default function Game({ maxSec, maxPhase }) {
             <Box sx={{ marginTop: '20px' }}>
               <Typography>수익률</Typography>
               <Typography sx={{ fontSize: '40px' }}>
-                {((cash / phaseStartCash - 1) * 100).toFixed(2)}
+                {`${((cash / phaseStartCash - 1) * 100).toFixed(2)}%`}
               </Typography>
             </Box>
           </>
@@ -125,23 +143,25 @@ export default function Game({ maxSec, maxPhase }) {
           <>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>주가</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{price}</Typography>
+              <Typography sx={{ fontSize: '40px' }}>{price.toLocaleString('ko-KR')}</Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>매입단가</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{buyPrice}</Typography>
+              <Typography sx={{ fontSize: '40px' }}>{buyPrice.toLocaleString('ko-KR')}</Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>평가손익</Typography>
               <Typography
                 sx={{ fontSize: '40px', color: gain === 0 ? 'black' : gain > 0 ? 'red' : 'blue' }}
               >
-                {gain}
+                {gain.toLocaleString('ko-KR')}
               </Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>총자산</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{cash + price * shareNum}</Typography>
+              <Typography sx={{ fontSize: '40px' }}>
+                {(cash + price * shareNum).toLocaleString('ko-KR')}
+              </Typography>
             </Box>
           </>
         )}
