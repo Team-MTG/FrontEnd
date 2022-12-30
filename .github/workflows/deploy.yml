@@ -1,0 +1,52 @@
+name: '빌드 및 배포'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build_and_deploy:
+    name: '빌드하고 배포한다!'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'ssh 환경설정'
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/deploy.key
+          chmod 600 ~/.ssh/deploy.key
+          cat >> ~/.ssh/config << END
+          Host deploy
+            HostName $SSH_HOST
+            User $SSH_USER
+            Port $SSH_PORT
+            IdentityFile ~/.ssh/deploy.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT }}
+
+      - name: '깃허브 저장소를 불러오고...'
+        uses: actions/checkout@v3
+
+      - name: 'node 환경 설정.'
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: '빌드하고...'
+        run: npm ci && npm run build
+
+      - name: '압축한다.'
+        run: tar -cvf build.tar dist
+
+      - name: 'scp로 보내고...'
+        run: scp build.tar deploy:~/
+
+      - name: '서버에서 압축만 풀면 끝!'
+        run: ssh deploy "tar -xvf build.tar"
