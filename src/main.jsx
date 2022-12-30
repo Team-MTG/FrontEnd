@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 import App from './App';
 import { worker } from './mocks/browser';
 import theme from './theme';
+import "../src/index.css"
 
 if (import.meta.env.DEV === true) {
   worker.start();

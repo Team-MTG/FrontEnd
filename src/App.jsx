@@ -8,6 +8,7 @@ import ErrorBoundary from './ErrorBoundary';
 import Game from './Game';
 import Loading from './Loading';
 import MainPage from './MainPage';
+import NotFound from './NotFound';
 import Rankings from './Rankings';
 import Result from './Result';
 
@@ -65,6 +66,7 @@ function App() {
           </ErrorBoundary>
         }
       />
+      <Route path="*" element={<NotFound msg="잘못된 주소입니다." />} />
     </Routes>
   );
 }
