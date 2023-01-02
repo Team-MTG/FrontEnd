@@ -39,6 +39,12 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      - name: 'dot env 파일 생성'
+        run: |
+          echo "VITE_API=$API_HOST" > .env
+        env:
+          API_HOST: ${{ secrets.DEPLOY_API_HOST }}
+
       - name: '빌드하고...'
         run: npm ci && npm run build
 

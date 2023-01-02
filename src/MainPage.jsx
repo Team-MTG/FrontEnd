@@ -5,7 +5,7 @@ import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDiss
 import { useRecoilState } from 'recoil';
 import { userNameState } from './atoms/user';
 import { generateRandomNumList } from './utils/random';
-import { MAX_PHASE, STOCKS_NUMBER } from './config';
+import { DEBUG, DEBUG_STOCKS_INDEX_LIST, MAX_PHASE, MAX_STOCKS_INDEX } from './config';
 
 function MainPage() {
   const [userName, setUserName] = useRecoilState(userNameState);
@@ -32,7 +32,9 @@ function MainPage() {
     } else {
       navigate('/game', {
         state: {
-          stockIndexList: generateRandomNumList(MAX_PHASE, STOCKS_NUMBER),
+          stockIndexList: DEBUG
+            ? DEBUG_STOCKS_INDEX_LIST
+            : generateRandomNumList(MAX_PHASE, MAX_STOCKS_INDEX),
         },
       });
     }
