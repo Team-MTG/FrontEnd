@@ -5,14 +5,13 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        'html, body': {
-          height: '100%',
-        },
         '#root': {
-          height: '100%',
-          maxHeight: '590px',
-          display: 'flex',
-          justifyContent: 'center',
+          // height: '100vh',
+          // maxWidth: '480px',
+          // maxHeight: '590px',
+          // display: 'flex',
+          // justifyContent: 'center',
+          // margin: '0 auto',/
         },
       },
     },

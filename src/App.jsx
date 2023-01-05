@@ -27,7 +27,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<Loading msg="로딩중..." />}>
+            <MainPage />
+          </Suspense>
+        }
+      />
       <Route
         path="/game"
         element={

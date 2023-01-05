@@ -7,6 +7,7 @@ import { stocksState } from './atoms/stocks';
 import { userCashState, userNameState, userTradingLogListState } from './atoms/user';
 import { SEED_MONEY } from './config';
 import useTimer from './hooks/useTimer';
+import prettyKorNum from './utils/prettyKorNum';
 import { generateRandomNumList } from './utils/random';
 
 const useGame = (phaseSec, phaseMax) => {
@@ -143,24 +144,24 @@ export default function Game({ maxSec, maxPhase }) {
           <>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>주가</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{price.toLocaleString('ko-KR')}</Typography>
+              <Typography sx={{ fontSize: '40px' }}>{prettyKorNum(price)}</Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>매입단가</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{buyPrice.toLocaleString('ko-KR')}</Typography>
+              <Typography sx={{ fontSize: '40px' }}>{prettyKorNum(buyPrice)}</Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>평가손익</Typography>
               <Typography
                 sx={{ fontSize: '40px', color: gain === 0 ? 'black' : gain > 0 ? 'red' : 'blue' }}
               >
-                {gain.toLocaleString('ko-KR')}
+                {prettyKorNum(gain)}
               </Typography>
             </Box>
             <Box sx={{ marginTop: '20px' }}>
               <Typography>총자산</Typography>
               <Typography sx={{ fontSize: '40px' }}>
-                {(cash + price * shareNum).toLocaleString('ko-KR')}
+                {prettyKorNum(cash + price * shareNum)}원
               </Typography>
             </Box>
           </>
