@@ -1,5 +1,4 @@
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { gameOverState } from './atoms/game';
@@ -98,88 +97,84 @@ export default function Game({ maxSec, maxPhase }) {
   }, [turnOver, shareNum, sell]);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: '320px',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <AppBar position="static">
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography>
-            {phase + 1}/{maxPhase}
-          </Typography>
-          <Typography>{userName}</Typography>
-          <Typography>
-            00:{maxSec - time < 10 && '0'}
-            {maxSec - time}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-          flexGrow: 9,
-        }}
-      >
+    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
+      <header className="flex flex-row justify-between w-10/12 border-2">
+        <span>{`${phase + 1}/${maxPhase}\xa0\xa0\xa0`}</span>
+        <span>{userName}</span>
+        <span>
+          00:{maxSec - time < 10 && '0'}
+          {maxSec - time}
+        </span>
+      </header>
+      <div className="text-center h-80 w-10/12">
         {turnOver ? (
           <>
-            <Box sx={{ marginTop: '20px' }}>
-              <Typography sx={{ fontSize: '40px' }}>{stocks[phase].stockName}</Typography>
-            </Box>
-            <Box sx={{ marginTop: '20px' }}>
-              <Typography>수익률</Typography>
-              <Typography sx={{ fontSize: '40px' }}>
-                {`${((cash / phaseStartCash - 1) * 100).toFixed(2)}%`}
-              </Typography>
-            </Box>
+            <p className="text-5xl my-4">{stocks[phase].stockName}</p>
+            <div className="text-3xl">
+              <span className="text-sm">당신의 수익률은...</span>
+              <p>{`${((cash / phaseStartCash - 1) * 100).toFixed(2)}%`}</p>
+            </div>
+            <div className="text-3xl">
+              <span className="text-sm">다른사람들은...</span>
+              <p>{`${((cash / phaseStartCash - 1) * 100).toFixed(2)}%`}</p>
+            </div>
           </>
         ) : (
           <>
-            <Box sx={{ marginTop: '20px' }}>
-              <Typography>주가</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{prettyKorNum(price)}</Typography>
-            </Box>
-            <Box sx={{ marginTop: '20px' }}>
-              <Typography>매입단가</Typography>
-              <Typography sx={{ fontSize: '40px' }}>{prettyKorNum(buyPrice)}</Typography>
-            </Box>
-            <Box sx={{ marginTop: '20px' }}>
-              <Typography>평가손익</Typography>
-              <Typography
-                sx={{ fontSize: '40px', color: gain === 0 ? 'black' : gain > 0 ? 'red' : 'blue' }}
+            <div className="my-4">
+              <span className="text-sm">주가</span>
+              <p className="text-3xl">{prettyKorNum(price)}원</p>
+            </div>
+            <div className="my-4">
+              <span className="text-sm">매입단가</span>
+              <p className="text-3xl">{prettyKorNum(buyPrice) || '0'}원</p>
+            </div>
+            <div className="my-4">
+              <span className="text-sm">평가손익</span>
+              <p
+                className={
+                  gain == 0
+                    ? 'text-3xl'
+                    : gain < 0
+                    ? 'text-3xl text-blue-400'
+                    : 'text-3xl text-red-400'
+                }
               >
-                {prettyKorNum(gain)}
-              </Typography>
-            </Box>
-            <Box sx={{ marginTop: '20px' }}>
-              <Typography>총자산</Typography>
-              <Typography sx={{ fontSize: '40px' }}>
+                {prettyKorNum(gain) || '0'}원
+              </p>
+            </div>
+            <div className="my-4">
+              <span className="text-sm">총자산</span>
+              <p
+                className={
+                  gain == 0
+                    ? 'text-3xl'
+                    : gain < 0
+                    ? 'text-3xl text-blue-400'
+                    : 'text-3xl text-red-400'
+                }
+              >
                 {prettyKorNum(cash + price * shareNum)}원
-              </Typography>
-            </Box>
+              </p>
+            </div>
           </>
         )}
-      </Box>
+      </div>
       {!turnOver ? (
-        <Button
-          sx={{ flexGrow: 1 }}
+        <button
+          className={
+            shareNum
+              ? 'w-10/12 text-2xl my-10 bg-blue-400 border-2 rounded-2xl border-gray-800 border-solid'
+              : 'w-10/12 text-2xl my-10 bg-red-400 border-2 rounded-2xl border-gray-800 border-solid'
+          }
           variant="contained"
           onClick={() => (shareNum ? sell(price) : buy(price))}
         >
-          <Typography sx={{ fontSize: '40px', margin: '10px' }}>
-            {shareNum ? '매도' : '매수'}
-          </Typography>
-        </Button>
+          <span>{shareNum ? '매도' : '매수'}</span>
+        </button>
       ) : gameOver ? (
-        <Button
-          sx={{ flexGrow: 1 }}
+        <button
+          className="w-10/12 text-2xl my-10 bg-orange-400 border-2 rounded-2xl border-gray-800 border-solid"
           variant="contained"
           onClick={() => {
             navigate('/result', {
@@ -187,11 +182,11 @@ export default function Game({ maxSec, maxPhase }) {
             });
           }}
         >
-          <Typography sx={{ fontSize: '40px', margin: '10px' }}>결과보기</Typography>
-        </Button>
+          <span>결과보기</span>
+        </button>
       ) : (
-        <Button
-          sx={{ flexGrow: 1 }}
+        <button
+          className="w-10/12 text-2xl my-10 bg-orange-400 border-2 rounded-2xl border-gray-800 border-solid"
           variant="contained"
           onClick={() => {
             resetTick();
@@ -199,9 +194,9 @@ export default function Game({ maxSec, maxPhase }) {
             setNextPhase();
           }}
         >
-          <Typography sx={{ fontSize: '40px', margin: '10px' }}>다음턴!</Typography>
-        </Button>
+          <span>다음턴!</span>
+        </button>
       )}
-    </Box>
+    </div>
   );
 }

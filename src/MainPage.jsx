@@ -10,7 +10,7 @@ import {
   URL_GITHUB,
   URL_NOTION,
 } from './config';
-import { totalRankedUserState } from './atoms/others';
+import { totalRankedUserState } from './atoms/info';
 import KIRBY_LOGO from './assets/kirby-mtg.gif';
 
 function MainPage() {
@@ -19,32 +19,39 @@ function MainPage() {
   const totalRankedUser = useRecoilValue(totalRankedUserState);
 
   return (
-    <div className="bg-slate-50 h-screen max-w-sm mx-auto flex flex-col justify-center items-center ">
+    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
       <h1 className="text-4xl ">모두의 투자 게임</h1>
       <img alt="귀여운 커비는 오늘도 달린다." src={KIRBY_LOGO} />
-      <input
-        className=" w-10/12 text-center my-10 text-2xl border-2 rounded-lg border-gray-700 border-solid"
-        maxLength="10"
-        placeholder="닉네임"
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-      />
-      <button
-        className="text-2xl w-10/12 my-10 bg-orange-400 border-2 rounded-2xl border-gray-800 border-solid"
-        disabled={!userName}
-        onClick={() => {
-          navigate('/game', {
-            state: {
-              stockIndexList: DEBUG
-                ? DEBUG_STOCKS_INDEX_LIST
-                : generateRandomNumList(MAX_PHASE, MAX_STOCKS_INDEX),
-            },
-          });
-        }}
-      >
-        {!userName ? '닉네임을 입력하세요!' : '게임하러 고고!'}
-      </button>
-      <p className="">지금까지 {totalRankedUser.toLocaleString('ko-KR')}명이 참여했어요.</p>
+      <form className="w-10/12 text-2xl" onSubmit={(e) => e.preventDefault()}>
+        <input
+          className="text-center w-full my-10 border-2 rounded-lg border-gray-700 border-solid"
+          type="text"
+          maxLength="10"
+          placeholder="닉네임"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+        <button
+          className="my-10 w-full bg-orange-400 disabled:bg-gray-300 border-2 rounded-2xl border-gray-800 border-solid"
+          type="submit"
+          disabled={!userName}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/game', {
+              state: {
+                stockIndexList: DEBUG
+                  ? DEBUG_STOCKS_INDEX_LIST
+                  : generateRandomNumList(MAX_PHASE, MAX_STOCKS_INDEX),
+              },
+            });
+          }}
+        >
+          {!userName ? '닉네임을 입력하세요!' : '게임하러 고고!'}
+        </button>
+      </form>
+      <p className="">
+        지금까지 <strong>{totalRankedUser.toLocaleString('ko-KR')}</strong>명이 참여했어요.
+      </p>
       <footer className="text-sm text-gray-700 mt-4">
         <nav>
           <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">

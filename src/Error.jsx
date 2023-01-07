@@ -1,4 +1,3 @@
-import { Box, Typography } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,17 +17,10 @@ const Error = ({ msg, cleanUp }) => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
       <ErrorOutlineIcon color="error" sx={{ fontSize: '100px' }} />
-      <Typography>{msg}</Typography>
-    </Box>
+      <span>{msg}</span>
+    </div>
   );
 };
 

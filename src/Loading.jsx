@@ -1,18 +1,11 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 
 const Loading = ({ msg }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
+    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
       <CircularProgress />
-      <Typography sx={{ marginTop: '30px' }}>{msg}</Typography>
-    </Box>
+      <p className="mt-8">{msg}</p>
+    </div>
   );
 };
 
