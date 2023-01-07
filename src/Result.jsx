@@ -1,8 +1,8 @@
-import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userCashState, userRateState } from './atoms/user';
 import { SEED_MONEY } from './config';
+import prettyKorNum from './utils/prettyKorNum';
 
 const Result = () => {
   const navigate = useNavigate();
@@ -10,61 +10,32 @@ const Result = () => {
   const userRate = useRecoilValue(userRateState);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: '320px',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-evenly',
-          flexGrow: 7,
-        }}
+    <div className="bg-slate-50 h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
+      <div className="text-center h-80 w-10/12">
+        <div className="text-3xl">
+          <span className="text-sm">시드머니</span>
+          <p>{prettyKorNum(SEED_MONEY)}</p>
+        </div>
+        <div className="text-3xl">
+          <span className="text-sm">평가손익</span>
+          <p>{prettyKorNum(userCash - SEED_MONEY)}</p>
+        </div>
+        <div className="text-3xl">
+          <span className="text-sm">잔고평가</span>
+          <p>{prettyKorNum(userCash)}</p>
+        </div>
+        <div className="text-3xl">
+          <span className="text-sm">총수익률</span>
+          <p>{`${(userRate * 100).toFixed(2)}%`}</p>
+        </div>
+      </div>
+      <button
+        className="w-10/12 text-2xl my-10 bg-orange-400 border-2 rounded-2xl border-gray-800 border-solid"
+        onClick={() => navigate('/rankings', { replace: true })}
       >
-        <Typography>
-          시드머니
-          <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {`${SEED_MONEY.toLocaleString('ko-KR')}`}
-          </Typography>
-        </Typography>
-        <Typography>
-          평가손익
-          <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {(userCash - SEED_MONEY).toLocaleString('ko-KR')}
-          </Typography>
-        </Typography>
-        <Typography>
-          잔고평가
-          <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {userCash.toLocaleString('ko-KR')}
-          </Typography>
-        </Typography>
-        <Typography>
-          총수익률
-          <Typography component={'span'} sx={{ fontSize: '50px' }}>
-            {`${(userRate * 100).toFixed(2)}%`}
-          </Typography>
-        </Typography>
-      </Box>
-      <Button
-        sx={{ width: '100%', flexGrow: 3 }}
-        variant="contained"
-        onClick={() => {
-          navigate('/rankings', {
-            replace: true,
-          });
-        }}
-      >
-        <Typography sx={{ fontSize: '30px' }}>랭킹확인!</Typography>
-      </Button>
-    </Box>
+        <span>랭킹확인!</span>
+      </button>
+    </div>
   );
 };
 

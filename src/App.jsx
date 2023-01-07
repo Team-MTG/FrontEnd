@@ -1,6 +1,6 @@
-import { Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { useResetRecoilState } from 'recoil';
+import { Suspense, useEffect } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { userCashState, userNameState } from './atoms/user';
 import { MAX_PHASE, MAX_SEC } from './config';
 import Error from './Error';
@@ -24,16 +24,30 @@ const useCleanUp = () => {
 
 function App() {
   const cleanUp = useCleanUp();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const userName = useRecoilValue(userNameState);
+
+  useEffect(() => {
+    if (location.pathname !== '/' && userName === '') navigate('/', { replace: true });
+  }, []);
 
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<Loading msg="로딩중..." />}>
+            <MainPage />
+          </Suspense>
+        }
+      />
       <Route
         path="/game"
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
-            cleanUp={cleanUp}
+            cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="주식 정보를 가져오는 중..." />}>
               <Game maxSec={MAX_SEC} maxPhase={MAX_PHASE} />
@@ -46,7 +60,7 @@ function App() {
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
-            cleanUp={cleanUp}
+            cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="랭킹을 불러오는 중..." />}>
               <Rankings />
@@ -59,6 +73,7 @@ function App() {
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
+            cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="랭킹을 서버에 등록하는 중..." />}>
               <Result />

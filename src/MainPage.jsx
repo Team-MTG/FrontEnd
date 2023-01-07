@@ -1,166 +1,73 @@
-import { Button, TextField, Box, Typography, Modal } from '@mui/material';
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userNameState } from './atoms/user';
 import { generateRandomNumList } from './utils/random';
-import { DEBUG, DEBUG_STOCKS_INDEX_LIST, MAX_PHASE, MAX_STOCKS_INDEX } from './config';
+import {
+  DEBUG,
+  DEBUG_STOCKS_INDEX_LIST,
+  MAX_PHASE,
+  MAX_STOCKS_INDEX,
+  URL_GITHUB,
+  URL_NOTION,
+} from './config';
+import { totalRankedUserState } from './atoms/info';
+import KIRBY_LOGO from './assets/kirby-mtg.gif';
 
 function MainPage() {
-  const [userName, setUserName] = useRecoilState(userNameState);
-  const [num, setNum] = useState(100000);
-  //모달 창
-  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const result = num.toLocaleString('ko-KR');
-    setNum(result);
-  }, []);
-
-  const handleChange = (e) => {
-    setUserName(e.target.value);
-  };
-
-  const onClick = () => {
-    if (userName === '') {
-      setOpen(true);
-      setTimeout(function () {
-        setOpen(false);
-      }, 2000); // 2000ms(2초)가 경과하면 이 함수가 실행됩니다.
-    } else {
-      navigate('/game', {
-        state: {
-          stockIndexList: DEBUG
-            ? DEBUG_STOCKS_INDEX_LIST
-            : generateRandomNumList(MAX_PHASE, MAX_STOCKS_INDEX),
-        },
-      });
-    }
-  };
-
-  const navMTG = () => {
-    window.open('https://github.com/Team-MTG', '_blank');
-  };
-  const navNotion = () => {
-    window.open('https://www.notion.so/e2de89087a894ccbbd58b8a395ba1355', '_blank');
-  };
-  const navGit = () => {
-    window.open('https://github.com/Team-MTG', '_blank');
-  };
+  const [userName, setUserName] = useRecoilState(userNameState);
+  const totalRankedUser = useRecoilValue(totalRankedUserState);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: '320px',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-      }}
-    >
-      <Typography
-        sx={{
-          marginTop: '20px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '40px',
-        }}
-      >
-        모두의 투자 게임
-      </Typography>
-      <Box
-        component="form"
-        sx={{
-          '& > :not(style)': { m: 1, width: '25ch' },
-          marginTop: '60px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TextField
-          id="outlined-basic"
-          label="이름"
-          variant="outlined"
+    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
+      <h1 className="text-4xl ">모두의 투자 게임</h1>
+      <img alt="귀여운 커비는 오늘도 달린다." src={KIRBY_LOGO} />
+      <form className="w-10/12 text-2xl" onSubmit={(e) => e.preventDefault()}>
+        <input
+          className="text-center w-full my-10 border-2 rounded-lg border-gray-700 border-solid"
+          type="text"
+          maxLength="10"
+          placeholder="닉네임"
           value={userName}
-          onChange={handleChange}
+          onChange={(e) => setUserName(e.target.value)}
         />
-      </Box>
-      <Box
-        sx={{
-          marginTop: '30px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Button
-          variant="contained"
-          sx={{
-            width: '25ch',
-          }}
-          onClick={onClick}
-        >
-          시작하기
-        </Button>
-      </Box>
-      <Box
-        sx={{
-          marginTop: '40px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        지금까지 {num}명이 참여했어요
-      </Box>
-      <Box
-        sx={{
-          marginTop: '30px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Box
-          sx={{
-            marginTop: '10px',
-            position: 'absolute',
-            bottom: '0',
+        <button
+          className="my-10 w-full bg-orange-400 disabled:bg-gray-300 border-2 rounded-2xl border-gray-800 border-solid"
+          type="submit"
+          disabled={!userName}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate('/game', {
+              state: {
+                stockIndexList: DEBUG
+                  ? DEBUG_STOCKS_INDEX_LIST
+                  : generateRandomNumList(MAX_PHASE, MAX_STOCKS_INDEX),
+              },
+            });
           }}
         >
-          <Button onClick={navMTG}>Team MTG</Button>
-          <Button onClick={navNotion}>Notion</Button>
-          <Button onClick={navGit}>Github</Button>
-        </Box>
-      </Box>
-      <Modal
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 250,
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            borderRadius: '30px',
-            p: 4,
-          }}
-        >
-          <SentimentVeryDissatisfiedIcon sx={{ color: 'red' }} />
-          <Typography id="modal-modal-description">이름을 입력해주십시오.</Typography>
-        </Box>
-      </Modal>
-    </Box>
+          {!userName ? '닉네임을 입력하세요!' : '게임하러 고고!'}
+        </button>
+      </form>
+      <p className="">
+        지금까지 <strong>{totalRankedUser.toLocaleString('ko-KR')}</strong>명이 참여했어요.
+      </p>
+      <footer className="text-sm text-gray-700 mt-4">
+        <nav>
+          <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
+            Team MTG
+          </a>
+          <span> | </span>
+          <a href={URL_NOTION} target="_blank" rel="external noreferrer noopener">
+            Notion
+          </a>
+          <span> | </span>
+          <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
+            Github
+          </a>
+        </nav>
+      </footer>
+    </div>
   );
 }
 
