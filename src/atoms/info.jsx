@@ -6,10 +6,14 @@ export const totalRankedUserState = atom({
   default: selector({
     key: 'totalRankedUserState/Default',
     get: async () => {
-      const {
-        headers: { 'x-total-count': total },
-      } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`);
-      return Number(total);
+      try {
+        const {
+          headers: { 'x-total-count': total },
+        } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`);
+        return Number(total);
+      } catch (error) {
+        return 0;
+      }
     },
   }),
 });
