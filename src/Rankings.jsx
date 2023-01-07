@@ -59,11 +59,10 @@ function Rankings() {
   //현재 주소 가져옴
   //const url = encodeURI(window.location.href);
   //테스트용으로 가능한 주소인 노션 주소 넣음
-  const url = 'https://www.notion.so/e2de89087a894ccbbd58b8a395ba1355';
+  let url = window.document.location.href + '?username=' + userName; //url에는 현재 주소값을 넣어줌;
 
   //url 복사
   const copyURL = () => {
-    let url = ''; // <a>태그에서 호출한 함수인 clip 생성
     const textarea = document.createElement('textarea');
     //url 변수 생성 후, textarea라는 변수에 textarea의 요소를 생성
 
@@ -87,12 +86,6 @@ function Rankings() {
 
   // Twitter
   const shareTwitter = () => {
-    const text = '나의 모투겜 랭킹은?';
-    window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url);
-  };
-
-  // KaKao -> 아직 구현 X
-  const shareKaKao = () => {
     const text = '나의 모투겜 랭킹은?';
     window.open('https://twitter.com/intent/tweet?text=' + text + '&url=' + url);
   };
