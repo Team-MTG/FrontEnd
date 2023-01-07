@@ -11,6 +11,8 @@ import MainPage from './MainPage';
 import NotFound from './NotFound';
 import Rankings from './Rankings';
 import Result from './Result';
+//
+import Share from './SharePage';
 
 const useCleanUp = () => {
   const resetUserCash = useResetRecoilState(userCashState);
@@ -77,6 +79,19 @@ function App() {
           >
             <Suspense fallback={<Loading msg="랭킹을 서버에 등록하는 중..." />}>
               <Result />
+            </Suspense>
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/share"
+        element={
+          <ErrorBoundary
+            fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
+            cleanUp={() => cleanUp()}
+          >
+            <Suspense fallback={<Loading msg="접속중..." />}>
+              <Share />
             </Suspense>
           </ErrorBoundary>
         }
