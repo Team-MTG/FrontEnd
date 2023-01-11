@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { userCashState, userNameState } from './atoms/user';
 import { MAX_PHASE, MAX_SEC } from './config';
@@ -96,6 +96,7 @@ function App() {
           </ErrorBoundary>
         }
       />
+      <Route path="/game/result" element={<SemiResult round={2} />} />
       <Route path="*" element={<NotFound msg="잘못된 주소입니다." />} />
     </Routes>
   );

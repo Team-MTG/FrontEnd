@@ -1,5 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 
+const colors = {
+  black: "#000000",
+  red: "#EF3C3C",
+  blue: "#5A75E5",
+  lightBlue: "#63C9EF",
+}
+
 // Create a theme instance.
 const theme = createTheme({
   components: {
@@ -16,6 +23,7 @@ const theme = createTheme({
       },
     },
   },
+  colors: colors
 });
 
 export default theme;
