@@ -11,7 +11,8 @@ import {
   URL_NOTION,
 } from './config';
 import { totalRankedUserState } from './atoms/info';
-import KIRBY_LOGO from './assets/kirby-mtg.gif';
+import LOGO from './assets/logo.png';
+import BARCODE from './assets/barcode.png';
 
 function MainPage() {
   const navigate = useNavigate();
@@ -19,20 +20,29 @@ function MainPage() {
   const totalRankedUser = useRecoilValue(totalRankedUserState);
 
   return (
-    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
-      <h1 className="text-4xl ">모두의 투자 게임</h1>
-      <img alt="귀여운 커비는 오늘도 달린다." src={KIRBY_LOGO} />
-      <form className="w-10/12 text-2xl" onSubmit={(e) => e.preventDefault()}>
-        <input
-          className="text-center w-full my-10 border-2 rounded-lg border-gray-700 border-solid"
-          type="text"
-          maxLength="10"
-          placeholder="닉네임"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-        />
+    <div className="bg-[url('../src/assets/bg-mainpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+      <div className="mt-5 ml-16 mr-auto">
+        <p className="text-lg">AIR TICKET</p>
+        <p className="text-xs">FIRST - CLASS</p>
+      </div>
+      <img className="mt-16" alt="귀여운 커비는 오늘도 달린다." src={LOGO} />
+      <form
+        className="w-40 text-2xl flex flex-col items-center"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <div className="text-center mt-2">
+          <p className="text-xs">Passenger | 탑승객</p>
+          <input
+            className="text-center text-lg w-full my-1 border-[1px] rounded-full border-gray-700 border-solid"
+            type="text"
+            maxLength="10"
+            placeholder="이름을 입력하세요"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          />
+        </div>
         <button
-          className="my-10 w-full bg-orange-400 disabled:bg-gray-300 border-2 rounded-2xl border-gray-800 border-solid"
+          className="mt-4 w-full text-xl text-white bg-[#63C9EF] disabled:bg-gray-300 rounded-2xl"
           type="submit"
           disabled={!userName}
           onClick={(e) => {
@@ -46,26 +56,40 @@ function MainPage() {
             });
           }}
         >
-          {!userName ? '닉네임을 입력하세요!' : '게임하러 고고!'}
+          게임 시작하기
         </button>
       </form>
-      <p className="">
+      <p className="text-xs mt-8">
         지금까지 <strong>{totalRankedUser.toLocaleString('ko-KR')}</strong>명이 참여했어요.
       </p>
-      <footer className="text-sm text-gray-700 mt-4">
-        <nav>
-          <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
-            Team MTG
-          </a>
-          <span> | </span>
-          <a href={URL_NOTION} target="_blank" rel="external noreferrer noopener">
-            Notion
-          </a>
-          <span> | </span>
-          <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
-            Github
-          </a>
-        </nav>
+      <hr className="mt-10 border-t-[1px] border-black w-[18rem]" />
+      <footer className="flex flex-row text-sm mt-2 ml-4">
+        <div className="">
+          <img alt="이것은 바코드다." src={BARCODE} />
+          <nav>
+            <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
+              Team MTG
+            </a>
+            <a
+              className="mx-4"
+              href={URL_NOTION}
+              target="_blank"
+              rel="external noreferrer noopener"
+            >
+              Notion
+            </a>
+            <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
+              Github
+            </a>
+          </nav>
+        </div>
+        <div className="ml-2 text-center">
+          <p className="text-xl">
+            <span className="text-[#63C9EF]">9C</span> GATE
+          </p>
+          <p className="text-xl">SEAT</p>
+          <p className="text-3xl text-[#63C9EF]">23</p>
+        </div>
       </footer>
     </div>
   );
