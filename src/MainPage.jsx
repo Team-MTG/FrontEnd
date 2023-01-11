@@ -21,7 +21,7 @@ function MainPage() {
 
   return (
     <div className="bg-[url('../src/assets/bg-mainpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
-      <div className="mt-5 ml-16 mr-auto">
+      <div className="ml-16 mr-auto">
         <p className="text-lg">AIR TICKET</p>
         <p className="text-xs">FIRST - CLASS</p>
       </div>
@@ -62,7 +62,7 @@ function MainPage() {
       <p className="text-xs mt-8">
         지금까지 <strong>{totalRankedUser.toLocaleString('ko-KR')}</strong>명이 참여했어요.
       </p>
-      <hr className="mt-10 border-t-[1px] border-black w-[18rem]" />
+      <hr className="mt-14 border-t-[1px] border-black w-[18rem]" />
       <footer className="flex flex-row text-sm mt-2 ml-4">
         <div className="">
           <img alt="이것은 바코드다." src={BARCODE} />
