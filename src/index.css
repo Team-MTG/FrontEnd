@@ -6,3 +6,13 @@
   font-family: 'galmuri';
   src: url('./assets/Galmuri9.woff2');
 }
+
+@font-face {
+  font-family: 'scdream';
+  src: url('./assets/SCDream4.woff2');
+}
+
+@font-face {
+  font-family: 'tenada';
+  src: url('./assets/Tenada.woff2');
+}

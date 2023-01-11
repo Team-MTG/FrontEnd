@@ -4,6 +4,8 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
+      sc: ['scdream', 'sans-serif'],
+      tn: ['tenada', 'sans-serif'],
       mtg: ['galmuri', 'sans-serif'],
     },
   },
