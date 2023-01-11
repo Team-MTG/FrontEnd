@@ -11,6 +11,7 @@ import MainPage from './MainPage';
 import NotFound from './NotFound';
 import Rankings from './Rankings';
 import Result from './Result';
+import SemiResult from './SemiResult';
 //
 import Share from './SharePage';
 
@@ -30,10 +31,10 @@ function App() {
   const navigate = useNavigate();
   const userName = useRecoilValue(userNameState);
 
-  useEffect(() => {
-    if (!location.pathname.startsWith('/share') && location.pathname !== '/' && userName === '')
-      navigate('/', { replace: true });
-  }, []);
+  // useEffect(() => {
+  //   if (!location.pathname.startsWith('/share') && location.pathname !== '/' && userName === '')
+  //     navigate('/', { replace: true });
+  // }, []);
 
   return (
     <Routes>
@@ -95,6 +96,12 @@ function App() {
               <Share />
             </Suspense>
           </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/game/result"
+        element={
+          <SemiResult round={2}/>
         }
       />
       <Route path="*" element={<NotFound msg="잘못된 주소입니다." />} />
