@@ -9,7 +9,9 @@ export const totalRankedUserState = atom({
       try {
         const {
           headers: { 'x-total-count': total },
-        } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`);
+        } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`, {
+          timeout: 2000,
+        });
         return Number(total);
       } catch (error) {
         return 0;
