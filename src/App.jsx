@@ -31,7 +31,8 @@ function App() {
   const userName = useRecoilValue(userNameState);
 
   useEffect(() => {
-    if (location.pathname !== '/' && userName === '') navigate('/', { replace: true });
+    if (!location.pathname.startsWith('/share') && location.pathname !== '/' && userName === '')
+      navigate('/', { replace: true });
   }, []);
 
   return (
