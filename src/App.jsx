@@ -13,6 +13,7 @@ import Protect from './Protect';
 import Rankings from './Rankings';
 import Result from './Result';
 import Share from './SharePage';
+import SemiResult from './SemiResult';
 
 const useCleanUp = () => {
   const resetUserCash = useResetRecoilState(userCashState);
