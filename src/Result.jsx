@@ -15,7 +15,7 @@ export default function Result() {
   const totalYield = totalBalance - SEED_MONEY;
 
   /*상세 결과 컴포넌트화*/
-  function detailResult(title, data, unit, decoration = false, fontSize = 'xs') {
+  function DetailResult({title, data, unit, decoration = false, fontSize = 'xs'}) {
     return (
       <div className="flex flex-col items-center">
         <p className={`text-${fontSize} my-1`}>{title}</p>
@@ -44,10 +44,10 @@ export default function Result() {
       </span>
 
       <div className="h-[21rem] py-[20px] relative top-12 font-sc font-bold flex flex-col justify-between items-center">
-        {detailResult('시드머니', SEED_MONEY, '원', false, 'base')}
-        {detailResult('평가손익', totalYield, '원')}
-        {detailResult('잔고평가', totalBalance, '원')}
-        {detailResult('총 수익률', totalProfit, '%', true)}
+        <DetailResult title="시드머니" data={SEED_MONEY} unit="원" fontSize="base"/>
+        <DetailResult title="평가손익" data={totalYield} unit="원"/>
+        <DetailResult title="잔고평가" data={totalBalance} unit="원"/>
+        <DetailResult title="총 수익률" data={totalProfit} unit="%" decoration={true}/>
       </div>
 
       <button
