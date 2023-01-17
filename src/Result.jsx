@@ -1,42 +1,63 @@
-import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { userCashState, userRateState } from './atoms/user';
-import { SEED_MONEY } from './config';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import prettyKorNum from './utils/prettyKorNum';
+import rankBtn from './assets/rankBtn.svg';
+import { SEED_MONEY } from './config';
+import { userCashState, userNameState, userRateState } from './atoms/user';
 
-const Result = () => {
+export default function Result() {
   const navigate = useNavigate();
-  const userCash = useRecoilValue(userCashState);
-  const userRate = useRecoilValue(userRateState);
 
-  return (
-    <div className="bg-slate-50 h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
-      <div className="text-center h-80 w-10/12">
-        <div className="text-3xl">
-          <span className="text-sm">시드머니</span>
-          <p>{prettyKorNum(SEED_MONEY)}</p>
-        </div>
-        <div className="text-3xl">
-          <span className="text-sm">평가손익</span>
-          <p>{prettyKorNum(userCash - SEED_MONEY)}</p>
-        </div>
-        <div className="text-3xl">
-          <span className="text-sm">잔고평가</span>
-          <p>{prettyKorNum(userCash)}</p>
-        </div>
-        <div className="text-3xl">
-          <span className="text-sm">총수익률</span>
-          <p>{`${(userRate * 100).toFixed(2)}%`}</p>
+  /*데이터*/
+  const userName = useRecoilValue(userNameState);
+  const totalProfit = useRecoilValue(userRateState) * 100;
+  const totalBalance = useRecoilValue(userCashState);
+  const totalYield = totalBalance - SEED_MONEY;
+
+  /*상세 결과 컴포넌트화*/
+  function DetailResult({title, data, unit, decoration = false, fontSize = 'xs'}) {
+    return (
+      <div className="flex flex-col items-center">
+        <p className={`text-${fontSize} my-1`}>{title}</p>
+        <div
+          className={`font-tn text-[22px] my-1 ${
+            decoration ? `underline decoration-4 decoration-solid decoration-[#63C9EF]` : ``
+          }`}
+        >
+          {prettyKorNum(data)}
+          {unit}
         </div>
       </div>
-      <button
-        className="w-10/12 text-2xl my-10 bg-orange-400 border-2 rounded-2xl border-gray-800 border-solid"
-        onClick={() => navigate('/rankings', { replace: true })}
+    );
+  }
+
+  return (
+    <div className="bg-[url('../src/assets/bg-resultpage.svg')] bg-contain bg-no-repeat bg-center h-[38rem] w-96 mx-auto flex flex-col justify-between items-center mt-[8vh]">
+      <span
+        className={`relative top-${
+          userName.length > 8 ? 24 : 28
+        } font-sc text-base leading-none font-bold text-center`}
       >
-        <span>랭킹확인!</span>
+        <span className="font-tn text-3xl">{userName}</span>
+        {userName.length > 8 ? <br /> : <></>}
+        님의 투자 결과
+      </span>
+
+      <div className="h-[21rem] py-[20px] relative top-12 font-sc font-bold flex flex-col justify-between items-center">
+        <DetailResult title="시드머니" data={SEED_MONEY} unit="원" fontSize="base"/>
+        <DetailResult title="평가손익" data={totalYield} unit="원"/>
+        <DetailResult title="잔고평가" data={totalBalance} unit="원"/>
+        <DetailResult title="총 수익률" data={totalProfit} unit="%" decoration={true}/>
+      </div>
+
+      <button
+        className="mb-1 bg-[url('../src/assets/rankBtn.svg')]"
+        onClick={() => {
+          navigate('/rankings');
+        }}
+      >
+        <img src={rankBtn} />
       </button>
     </div>
   );
-};
-
-export default Result;
+}
