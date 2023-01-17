@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { generateRandomNumList } from './utils/random';
 import { MAX_PHASE } from './config';
 import { rankingsState } from './atoms/rankings';
 import { useEffect } from 'react';
 import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
+import replayBtn from './assets/replayBtn.png';
 
 function RankItem({ nickName, profit, total, rank }) {
   return (
@@ -50,9 +51,9 @@ function SharePage() {
         <div className="basis-1/4 ">{userRank}</div>
         <div className="basis-1/4">
           <p>{userName}</p>
-          <p className="text-gray-500">{profit} %</p>
+          <p className="text-gray-500">{(userRate * 100).toFixed(2)} %</p>
         </div>
-        <p className="basis-1/2 grid justify-items-end">{total.toLocaleString('ko-KR')} 원</p>
+        <p className="basis-1/2 grid justify-items-end">{userCash.toLocaleString('ko-KR')} 원</p>
       </div>
       <div className="overflow-y-scroll w-full">
         {rankings.map((rank) => (
@@ -65,12 +66,7 @@ function SharePage() {
           />
         ))}
       </div>
-      <button
-        className="my-10 w-full bg-orange-400 disabled:bg-gray-300 border-2 rounded-2xl border-gray-800 border-solid"
-        onClick={gamePlay}
-      >
-        게임하러 고고!
-      </button>
+      <img src={replayBtn} onClick={gamePlay} />
     </div>
   );
 }

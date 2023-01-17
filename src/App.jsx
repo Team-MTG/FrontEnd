@@ -14,6 +14,7 @@ import Rankings from './Rankings';
 import Result from './Result';
 import SemiResult from './SemiResult';
 import Share from './SharePage';
+import SemiResult from './SemiResult';
 
 const useCleanUp = () => {
   const resetUserCash = useResetRecoilState(userCashState);
