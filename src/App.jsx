@@ -12,6 +12,7 @@ import NotFound from './NotFound';
 import Protect from './Protect';
 import Rankings from './Rankings';
 import Result from './Result';
+import SemiResult from './SemiResult';
 import Share from './SharePage';
 
 const useCleanUp = () => {
@@ -39,14 +40,14 @@ function App() {
         }
       />
       <Route
-        path="/game"
+        path="/game/:round"
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
             cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="주식 정보를 가져오는 중..." />}>
-              <Protect when={userName === ''}>
+              <Protect when={userName === ''} to="/">
                 <Game maxSec={MAX_SEC} maxPhase={MAX_PHASE} />
               </Protect>
             </Suspense>
@@ -97,6 +98,7 @@ function App() {
         }
       />
       <Route path="/game/result" element={<SemiResult round={2} />} />
+      <Route path="/dev" element={<Loading msg="로딩중..." />} />
       <Route path="*" element={<NotFound msg="잘못된 주소입니다." />} />
     </Routes>
   );

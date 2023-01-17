@@ -20,7 +20,7 @@ function MainPage() {
   const totalRankedUser = useRecoilValue(totalRankedUserState);
 
   return (
-    <div className="bg-[url('../src/assets/bg-mainpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+    <div className="bg-[url('./assets/bg-mainpage.svg')] bg-no-repeat bg-center bg-auto h-[38rem] w-[24rem] mt-[8vh] mx-auto flex flex-col items-center">
       <div className="ml-16 mr-auto">
         <p className="text-lg">AIR TICKET</p>
         <p className="text-xs">FIRST - CLASS</p>
