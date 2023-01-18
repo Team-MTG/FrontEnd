@@ -1,17 +1,16 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 
-export const totalRankedUserState = atom({
-  key: 'totalRankedUserState',
+const totalUserCountState = atom({
+  key: 'totalUserCountState',
   default: selector({
-    key: 'totalRankedUserState/Default',
+    key: 'totalUserCountState/Default',
     get: async () => {
       try {
         const {
           headers: { 'x-total-count': total },
-        } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`, {
-          timeout: 2000,
-        });
+        } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`);
+        if (total === undefined) return 0;
         return Number(total);
       } catch (error) {
         return 0;
@@ -19,3 +18,4 @@ export const totalRankedUserState = atom({
     },
   }),
 });
+export { totalUserCountState };

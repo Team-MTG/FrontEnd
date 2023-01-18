@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { userCashState, userNameState } from './atoms/user';
+import { userBalanceState, userNameState } from './atoms/user';
 import { MAX_PHASE, MAX_SEC } from './config';
 import Error from './Error';
 import ErrorBoundary from './ErrorBoundary';
@@ -14,10 +14,9 @@ import Rankings from './Rankings';
 import Result from './Result';
 import SemiResult from './SemiResult';
 import Share from './SharePage';
-import SemiResult from './SemiResult';
 
 const useCleanUp = () => {
-  const resetUserCash = useResetRecoilState(userCashState);
+  const resetUserCash = useResetRecoilState(userBalanceState);
   const resetUserName = useResetRecoilState(userNameState);
   const cleanUp = () => {
     resetUserCash();
@@ -41,7 +40,7 @@ function App() {
         }
       />
       <Route
-        path="/game/:round"
+        path="/game"
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}

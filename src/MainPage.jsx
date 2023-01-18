@@ -10,14 +10,14 @@ import {
   URL_GITHUB,
   URL_NOTION,
 } from './config';
-import { totalRankedUserState } from './atoms/info';
+import { totalUserCountState } from './atoms/info';
 import LOGO from './assets/logo.png';
 import BARCODE from './assets/barcode.png';
 
 function MainPage() {
   const navigate = useNavigate();
   const [userName, setUserName] = useRecoilState(userNameState);
-  const totalRankedUser = useRecoilValue(totalRankedUserState);
+  const totalUserCount = useRecoilValue(totalUserCountState);
 
   return (
     <div className="bg-[url('./assets/bg-mainpage.svg')] bg-no-repeat bg-center bg-auto h-[38rem] w-[24rem] mt-[8vh] mx-auto flex flex-col items-center">
@@ -60,7 +60,7 @@ function MainPage() {
         </button>
       </form>
       <p className="text-xs mt-8">
-        지금까지 <strong>{totalRankedUser.toLocaleString('ko-KR')}</strong>명이 참여했어요.
+        지금까지 <strong>{totalUserCount.toLocaleString('ko-kr')}</strong>명이 참여했어요.
       </p>
       <hr className="mt-14 border-t-[1px] border-black w-[18rem]" />
       <footer className="flex flex-row text-sm mt-2 ml-4">

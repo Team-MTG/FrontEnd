@@ -28,11 +28,11 @@ const userRankState = atom({
 });
 export { userRankState };
 
-const userCashState = atom({
-  key: 'userCashState',
+const userBalanceState = atom({
+  key: 'userBalanceState',
   default: SEED_MONEY,
 });
-export { userCashState };
+export { userBalanceState };
 
 const userRateState = selector({
   key: 'userRateState',
@@ -42,12 +42,6 @@ const userRateState = selector({
   },
 });
 export { userRateState };
-
-const userTradingLogListState = atom({
-  key: 'userTradingLogList',
-  default: [],
-});
-export { userTradingLogListState };
 
 /* 
 [

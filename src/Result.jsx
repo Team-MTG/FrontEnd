@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState 
 import prettyKorNum from './utils/prettyKorNum';
 import rankBtn from './assets/rankBtn.svg';
 import { SEED_MONEY } from './config';
-import { userCashState, userNameState, userRateState } from './atoms/user';
+import { userBalanceState, userNameState, userRateState } from './atoms/user';
 
 export default function Result() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function Result() {
   /*데이터*/
   const userName = useRecoilValue(userNameState);
   const totalProfit = useRecoilValue(userRateState) * 100;
-  const totalBalance = useRecoilValue(userCashState);
+  const totalBalance = useRecoilValue(userBalanceState);
   const totalYield = totalBalance - SEED_MONEY;
 
   /*상세 결과 컴포넌트화*/

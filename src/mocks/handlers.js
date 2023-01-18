@@ -13,12 +13,12 @@ const RANKINGS = [
 
 export const handlers = [
   rest.head(`${import.meta.env.VITE_API}/api/rankings`, (req, res, ctx) => {
-    return req.passthrough();
+    // return req.passthrough();
     return res(ctx.set('X-Total-Count', '10000'));
   }),
   rest.get(`${import.meta.env.VITE_API}/api/stocks`, (req, res, ctx) => {
     // return req.passthrough();
-    return res(ctx.delay(1234), ctx.json([naver, naver, naver, naver, naver, naver]));
+    return res(ctx.json([naver, naver, naver, naver, naver, naver]));
   }),
   rest.post(`${import.meta.env.VITE_API}/api/rankings`, async (req, res, ctx) => {
     return req.passthrough();
