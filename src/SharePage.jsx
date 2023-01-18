@@ -5,7 +5,7 @@ import { MAX_PHASE } from './config';
 import { rankingsState } from './atoms/rankings';
 import { useEffect } from 'react';
 import { userBalanceState, userNameState, userRankState, userRateState } from './atoms/user';
-import replayBtn from './assets/replayBtn.png';
+import replayBtn from './assets/replayBtn.svg';
 
 function RankItem({ nickName, profit, total, rank }) {
   const [st, setSt] = useState('w-full bg-zinc-500 h-[60px] p-2 flex');
