@@ -5,17 +5,23 @@ import { MAX_PHASE } from './config';
 import { rankingsState } from './atoms/rankings';
 import { useEffect } from 'react';
 import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
-import replayBtn from './assets/replayBtn.png';
+import replayBtn from './assets/replayBtn.svg';
 
 function RankItem({ nickName, profit, total, rank }) {
+  const [st, setSt] = useState('w-full bg-zinc-500 h-[60px] p-2 flex');
+
+  if (rank % 2 != 0) {
+    setSt('w-full bg-zinc-700 h-[60px] p-2 flex');
+  }
+
   return (
-    <div className="w-full rounded-lg border-2 border-gray-500 mt-3 p-4 flex">
-      <div className="basis-1/4 ">{rank}</div>
-      <div className="basis-1/4">
-        <p>{nickName}</p>
-        <p className="text-gray-500">{profit} %</p>
+    <div className={st}>
+      <p className="basis-1/5 ml-2 text-white">{rank}위</p>
+      <p className="basis-1/5 ml-2 text-amber-300">{nickName}</p>
+      <div className="basis-1/2 grid justify-items-end text-white">
+        <p>{total.toLocaleString('ko-KR')}원</p>
+        <p className="text-sm">{profit} %</p>
       </div>
-      <p className="basis-1/2 grid justify-items-end">{total.toLocaleString('ko-KR')}원</p>
     </div>
   );
 }
@@ -23,12 +29,12 @@ function RankItem({ nickName, profit, total, rank }) {
 function SharePage() {
   const navigate = useNavigate();
 
-  let { params } = useParams();
+  let params = useParams();
 
   const [userName, setUserName] = useRecoilState(userNameState);
 
   useEffect(() => {
-    setUserName(params);
+    setUserName(params.nickname);
   }, []);
 
   const rankings = useRecoilValue(rankingsState);
@@ -46,27 +52,47 @@ function SharePage() {
   };
 
   return (
-    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
-      <div className="w-full rounded-lg border-4 border-orange-300 p-4 flex">
-        <div className="basis-1/4 ">{userRank}</div>
-        <div className="basis-1/4">
-          <p>{userName}</p>
-          <p className="text-gray-500">{(userRate * 100).toFixed(2)} %</p>
+    <div className="bg-[url('../src/assets/bg-rankpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+      <div className="static">
+        <div className="bg-gray-500 w-[500px] h-[500px]">
+          <div className="absolute top-0 left-0 border-[1px] border-gray-700  w-[280px] h-[70px]  mt-[3vh] p-1 bg-white">
+            <div className="p-1 w-[268px] h-[58px] bg-amber-300">
+              <p className="ml-2">나의 순위 : {userRank}위</p>
+              <div className="flex ml-2">
+                <p>{userCash.toLocaleString('ko-KR')} 원</p>
+                <span className="text-xs inline-block align-baseline">
+                  &nbsp; &#40;{(userRate * 100).toFixed(2)}&#41;%
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="basis-1/2 grid justify-items-end">{userCash.toLocaleString('ko-KR')} 원</p>
       </div>
-      <div className="overflow-y-scroll w-full">
-        {rankings.map((rank) => (
-          <RankItem
-            key={rank.id}
-            rank={rank.rank}
-            nickName={rank.name}
-            profit={rank.rate.toFixed(2)}
-            total={rank.totalCash}
-          />
-        ))}
+      <div className=" mt-1 border-[1px] border-gray-700 w-[280px] h-[400px] p-1 bg-white">
+        <div className="p-1 w-[268px] h-[58px] bg-amber-300">
+          <p className="ml-2 text-lg">전체 순위</p>
+          <div className="flex">
+            <p className="basis-1/5 ml-2">순위</p>
+            <p className="basis-1/5 ml-2">탑승객</p>
+            <p className="basis-1/2 ml-2 grid justify-items-end">금액 &#40;수익률&#41;</p>
+          </div>
+        </div>
+        <div className="h-[310px] overflow-y-scroll mt-1">
+          {rankings.map((rank) => (
+            <RankItem
+              key={rank.nickName}
+              rank={rank.ranking}
+              nickName={rank.nickName}
+              profit={rank.profit.toFixed(2)}
+              total={rank.totalYield}
+            />
+          ))}
+        </div>
       </div>
-      <img src={replayBtn} onClick={gamePlay} />
+      <div className="overflow-y-scroll w-full"></div>
+      <button className="mt-1 bg-[url('../src/assets/replayBtn.svg')]" onClick={gamePlay}>
+        <img src={replayBtn} />
+      </button>
     </div>
   );
 }
