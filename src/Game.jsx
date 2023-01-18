@@ -395,9 +395,6 @@ export default function Game({ maxSec, maxPhase }) {
     setTradeLog(({ sell, buy }) => ({ sell: [...sell, date], buy }));
   };
 
-  // const { phase, time, turnOver, setNextPhase, gameOver } = useGame(maxSec, maxPhase);
-  const [roundStartCash, setRoundStartCash] = useState(SEED_MONEY);
-
   useEffect(() => {
     resetBalance();
     return () => {
@@ -476,18 +473,17 @@ export default function Game({ maxSec, maxPhase }) {
           </p>
         </div>
       </div>
-      <button
-        className={
-          holdings === 0
-            ? "bg-[url('../src/assets/buyBtn.png')] h-[82px] w-[296px] mt-16"
-            : "bg-[url('../src/assets/sellBtn.png')] h-[82px] w-[296px] mt-16"
-        }
-        onClick={() =>
-          holdings === 0
-            ? buy(currData.price, currData.date.substring(2))
-            : sell(currData.price, currData.date.substring(2))
-        }
-      />
+      {holdings === 0 ? (
+        <button
+          className="bg-[url('../src/assets/buyBtn.png')] h-[82px] w-[296px] mt-16"
+          onClick={() => buy(currData.price, currData.date.substring(2))}
+        ></button>
+      ) : (
+        <button
+          className="bg-[url('../src/assets/sellBtn.png')] h-[82px] w-[296px] mt-16"
+          onClick={() => sell(currData.price, currData.date.substring(2))}
+        ></button>
+      )}
     </div>
   );
 }

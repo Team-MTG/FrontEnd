@@ -10,7 +10,6 @@ const totalUserCountState = atom({
         const {
           headers: { 'x-total-count': total },
         } = await axios.head(`${import.meta.env.VITE_API}/api/rankings`);
-        if (total === undefined) return 0;
         return Number(total);
       } catch (error) {
         return 0;
