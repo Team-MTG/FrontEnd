@@ -535,7 +535,6 @@ export default function Game({ maxSec, maxPhase }) {
         avgProfit: currStock.avgProfit,
         profit: balance / roundStartBalance.current - 1,
         yield: balance - roundStartBalance.current,
-        datas: currStock.datas,
         tradeLog,
       }}
     />
