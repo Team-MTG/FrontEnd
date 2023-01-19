@@ -1,22 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { gameRoundState, roundLogState, tradeLogState } from './atoms/game';
-import { stocksState } from './atoms/stocks';
+import { stockState } from './atoms/stocks';
 import { userBalanceState } from './atoms/user';
-import { MAX_PHASE, SEED_MONEY } from './config';
 import useTimer from './hooks/useTimer';
 import prettyKorNum from './utils/prettyKorNum';
 
 const background = {
-  0: "bg-[#7A8799] bg-[url('../src/assets/morning.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
-  1: "bg-[#A58484] bg-[url('../src/assets/sunset.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
-  2: "bg-[#A58484] bg-[url('../src/assets/sunset.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
-  3: "bg-[#545454] bg-[url('../src/assets/midnight.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
-  4: "bg-[#545454] bg-[url('../src/assets/midnight.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
+  0: "font-tn bg-[#7A8799] bg-[url('../src/assets/morning.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
+  1: "font-tn bg-[#A58484] bg-[url('../src/assets/sunset.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
+  2: "font-tn bg-[#A58484] bg-[url('../src/assets/sunset.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
+  3: "font-tn bg-[#545454] bg-[url('../src/assets/midnight.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
+  4: "font-tn bg-[#545454] bg-[url('../src/assets/midnight.png')] bg-no-repeat bg-center h-[38rem] max-w-xs mt-[8vh] mx-auto flex flex-col items-center",
 };
 
-const GameRoundBar = ({ className, round }) => {
+const GameRoundBar = ({ className, round, roundLog }) => {
   return (
     <svg
       className={className}
@@ -33,7 +32,6 @@ const GameRoundBar = ({ className, round }) => {
         stroke="black"
         strokeMiterlimit="10"
       />
-
       <path
         opacity="0.2"
         d="M113.68 33.85C113.68 33.36 113.42 32.88 112.89 32.65L91.74 23.55C90.82 23.16 89.79 23.16 88.87 23.55L67.72 32.65C67.19 32.88 66.93 33.36 66.93 33.85V45.79H66.94C66.96 46.13 67.11 46.47 67.39 46.71C67.48 46.79 67.59 46.86 67.72 46.91L88.87 56.01C89.33 56.21 89.81 56.3 90.3 56.3C90.54 56.3 90.79 56.28 91.03 56.23C91.27 56.18 91.51 56.11 91.73 56.01L112.88 46.91C113 46.86 113.11 46.79 113.21 46.71C113.49 46.47 113.64 46.14 113.66 45.79H113.67V33.85H113.68Z"
@@ -279,7 +277,7 @@ const GameRoundBar = ({ className, round }) => {
       <g id="flag-1" visibility={round >= 1 ? 'visible' : 'hidden'}>
         <path
           d="M84.03 2C77.94 2 73 6.94 73 13.03C73 21.31 84.03 33.52 84.03 33.52C84.03 33.52 95.06 21.3 95.06 13.03C95.06 6.94 90.12 2 84.03 2ZM84.03 16.98C81.85 16.98 80.09 15.22 80.09 13.04C80.09 10.86 81.85 9.1 84.03 9.1C86.21 9.1 87.97 10.86 87.97 13.04C87.97 15.22 86.21 16.98 84.03 16.98Z"
-          fill="#EF3C3C"
+          fill={roundLog?.[0]?.profit < 0 ? '#5A75E5' : '#EF3C3C'}
           stroke="black"
           strokeWidth="0.51"
           strokeMiterlimit="10"
@@ -295,7 +293,7 @@ const GameRoundBar = ({ className, round }) => {
       <g id="flag-2" visibility={round >= 2 ? 'visible' : 'hidden'}>
         <path
           d="M132.03 30C125.94 30 121 34.94 121 41.03C121 49.31 132.03 61.52 132.03 61.52C132.03 61.52 143.06 49.3 143.06 41.03C143.06 34.94 138.12 30 132.03 30V30ZM132.03 44.98C129.85 44.98 128.09 43.22 128.09 41.04C128.09 38.86 129.85 37.1 132.03 37.1C134.21 37.1 135.97 38.86 135.97 41.04C135.97 43.22 134.21 44.98 132.03 44.98Z"
-          fill="#EF3C3C"
+          fill={roundLog?.[1]?.profit < 0 ? '#5A75E5' : '#EF3C3C'}
           stroke="black"
           strokeWidth="0.51"
           strokeMiterlimit="10"
@@ -311,7 +309,7 @@ const GameRoundBar = ({ className, round }) => {
       <g id="flag-3" visibility={round >= 3 ? 'visible' : 'hidden'}>
         <path
           d="M180.03 2C173.94 2 169 6.94 169 13.03C169 21.31 180.03 33.52 180.03 33.52C180.03 33.52 191.06 21.3 191.06 13.03C191.06 6.94 186.12 2 180.03 2V2ZM180.03 16.98C177.85 16.98 176.09 15.22 176.09 13.04C176.09 10.86 177.85 9.1 180.03 9.1C182.21 9.1 183.97 10.86 183.97 13.04C183.97 15.22 182.21 16.98 180.03 16.98Z"
-          fill="#EF3C3C"
+          fill={roundLog?.[2]?.profit < 0 ? '#5A75E5' : '#EF3C3C'}
           stroke="black"
           strokeWidth="0.51"
           strokeMiterlimit="10"
@@ -327,7 +325,7 @@ const GameRoundBar = ({ className, round }) => {
       <g id="flag-4" visibility={round >= 4 ? 'visible' : 'hidden'}>
         <path
           d="M228.03 30C221.94 30 217 34.94 217 41.03C217 49.31 228.03 61.52 228.03 61.52C228.03 61.52 239.06 49.3 239.06 41.03C239.06 34.94 234.12 30 228.03 30V30ZM228.03 44.98C225.85 44.98 224.09 43.22 224.09 41.04C224.09 38.86 225.85 37.1 228.03 37.1C230.21 37.1 231.97 38.86 231.97 41.04C231.97 43.22 230.21 44.98 228.03 44.98Z"
-          fill="#EF3C3C"
+          fill={roundLog?.[3]?.profit < 0 ? '#5A75E5' : '#EF3C3C'}
           stroke="black"
           strokeWidth="0.51"
           strokeMiterlimit="10"
@@ -343,7 +341,7 @@ const GameRoundBar = ({ className, round }) => {
       <g id="flag-5" visibility={round >= 5 ? 'visible' : 'hidden'}>
         <path
           d="M276.03 2C269.94 2 265 6.94 265 13.03C265 21.31 276.03 33.52 276.03 33.52C276.03 33.52 287.06 21.3 287.06 13.03C287.06 6.94 282.12 2 276.03 2V2ZM276.03 16.98C273.85 16.98 272.09 15.22 272.09 13.04C272.09 10.86 273.85 9.1 276.03 9.1C278.21 9.1 279.97 10.86 279.97 13.04C279.97 15.22 278.21 16.98 276.03 16.98Z"
-          fill="#EF3C3C"
+          fill={roundLog?.[4]?.profit < 0 ? '#5A75E5' : '#EF3C3C'}
           stroke="black"
           strokeWidth="0.51"
           strokeMiterlimit="10"
@@ -360,113 +358,137 @@ const GameRoundBar = ({ className, round }) => {
   );
 };
 
-export default function Game({ maxSec, maxPhase }) {
-  // utils
-  const navigate = useNavigate();
-  const location = useLocation();
-  const resetBalance = useResetRecoilState(userBalanceState);
+const TradingBtn = ({ mode }) => {
+  const color = mode === 'sell' ? '#5A75E5' : '#EA4B4B';
 
+  return (
+    <svg
+      width="297"
+      height="83"
+      viewBox="0 0 297 83"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        opacity="0.2"
+        d="M297 73.23V5H239.77L239.79 5.03L229.9 14.92L220 5.03L220.02 5H5V83H220.02L229.9 73.13L239.77 83H287.02L296.9 73.13L297 73.23Z"
+        fill="black"
+      />
+      <path
+        d="M293 69.23V1H235.77L235.79 1.03L225.9 10.92L216 1.03L216.02 1H1V79H216.02L225.9 69.13L235.77 79H283.02L292.9 69.13L293 69.23Z"
+        fill="white"
+      />
+      <path d="M226 12V67.28" stroke="black" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M237.52 40.45L205.99 71.99H1"
+        stroke={color}
+        strokeWidth="2"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+      />
+      <path d="M235.77 1L235.79 1.03L228.24 8.57999H293V1H235.77Z" fill={color} />
+      <path d="M216 1.03L216.02 1H1V8.57999H223.55L216 1.03Z" fill={color} />
+      <path
+        d="M293 69.23V1H235.77L235.79 1.03L225.9 10.92L216 1.03L216.02 1H1V79H216.02L225.9 69.13L235.77 79H283.02L292.9 69.13L293 69.23Z"
+        stroke="black"
+        strokeLinejoin="round"
+      />
+      {mode === 'sell' ? (
+        <path
+          d="M254.291 48.5635C254.861 46.6235 256.641 40.0435 257.371 37.3135C255.051 37.2335 252.751 36.9334 250.491 36.4234C248.671 37.8434 245.181 40.4934 244.351 40.5934C242.941 40.7534 242.691 40.4234 243.341 39.2634C243.991 38.1034 245.961 34.2434 245.961 34.2434C245.961 34.2434 244.181 30.3334 243.591 29.1534C243.001 27.9734 243.261 27.6434 244.661 27.8534C245.481 27.9734 248.841 30.7234 250.591 32.1834C252.871 31.7334 255.181 31.5034 257.511 31.4834C256.911 28.7434 255.451 22.1134 254.981 20.1634C254.571 18.4534 255.911 19.1335 255.911 19.1335C256.761 19.5435 257.541 20.1034 258.201 20.7834C260.951 24.4234 265.101 30.2535 266.071 31.6235C266.821 31.6335 267.631 31.6434 268.531 31.6634C278.501 31.8034 279.411 34.0434 279.401 34.7234C279.391 35.4034 278.361 37.6134 268.391 37.4834L265.931 37.4534C264.891 38.7934 260.461 44.5035 257.521 48.0635C256.831 48.7235 256.031 49.2634 255.161 49.6534C255.161 49.6534 253.791 50.2934 254.291 48.5934V48.5635Z"
+          fill={color}
+        />
+      ) : (
+        <path
+          d="M268.11 20.208C267.54 22.148 265.76 28.728 265.03 31.458C267.35 31.538 269.65 31.838 271.91 32.348C273.73 30.928 277.22 28.2781 278.05 28.1781C279.46 28.0181 279.71 28.3481 279.06 29.5081C278.41 30.6681 276.44 34.528 276.44 34.528C276.44 34.528 278.22 38.4381 278.81 39.6181C279.4 40.7981 279.14 41.1281 277.74 40.9181C276.92 40.7981 273.56 38.048 271.81 36.588C269.53 37.038 267.22 37.268 264.89 37.288C265.49 40.028 266.95 46.6581 267.42 48.6081C267.83 50.3181 266.49 49.638 266.49 49.638C265.64 49.228 264.86 48.6681 264.2 47.9881C261.45 44.3481 257.3 38.518 256.33 37.148C255.58 37.138 254.77 37.1281 253.87 37.1081C243.9 36.9681 242.99 34.7281 243 34.0481C243.01 33.3681 244.04 31.158 254.01 31.288L256.47 31.3181C257.51 29.9781 261.94 24.268 264.88 20.708C265.57 20.048 266.37 19.5081 267.24 19.1181C267.24 19.1181 268.61 18.4781 268.11 20.1781V20.208Z"
+          fill={color}
+        />
+      )}
+    </svg>
+  );
+};
+
+export default function Game({ maxSec, maxPhase }) {
   // game info
   const round = useRecoilValue(gameRoundState);
   const timer = useTimer(maxSec, 1000);
-  const currStock = useRecoilValue(stocksState(location.state.stockIndexList))[round];
+  const currStock = useRecoilValue(stockState)[round];
   const tick = useTimer(currStock.datas.length - 1, (maxSec * 1000) / currStock.datas.length);
   const currData = currStock.datas[currStock.datas.length - 1 - tick.time];
-  const setRoundLog = useSetRecoilState(roundLogState);
-  const [tradeLog, setTradeLog] = useRecoilState(tradeLogState);
+  const [tradeLog, setTradeLog] = useState({ sell: [], buy: [] });
 
   // user info
   const [balance, setBalance] = useRecoilState(userBalanceState); // 현금
   const roundStartBalance = useRef(balance);
   const [avgPrice, setAvgPrice] = useState(0); // 매수가
   const [holdings, setHoldings] = useState(0); // 보유수량
-  const userYield = (currData.price - avgPrice) * holdings;
-  const buy = (price, date) => {
-    const newHoldings = Math.floor(balance / price);
-    setAvgPrice(price);
-    setBalance((prevBalance) => prevBalance - price * newHoldings);
-    setHoldings(newHoldings);
-    setTradeLog(({ sell, buy }) => ({ sell, buy: [...buy, date] }));
-  };
-  const sell = (price, date) => {
-    setAvgPrice(0);
-    setBalance((prevBalance) => prevBalance + price * holdings);
-    setHoldings(0);
-    setTradeLog(({ sell, buy }) => ({ sell: [...sell, date], buy }));
-  };
 
   useEffect(() => {
-    resetBalance();
-    return () => {
-      setRoundLog((prevLog) => [
-        ...prevLog,
-        { profit: balance / roundStartBalance - 1, userYield, stockname: currStock.stockname },
-      ]);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (timer.time === 0) {
-      sell(price);
-      navigate('/game/result');
+    if (timer.time === 0 && holdings !== 0) {
+      setAvgPrice(0);
+      setBalance((prevBalance) => prevBalance + currData.price * holdings);
+      setHoldings(0);
+      setTradeLog(({ sell, buy }) => ({ sell: [...sell, currData.date.substring(2)], buy }));
     }
-  }, [sell, navigate]);
+  }, [
+    timer.time,
+    holdings,
+    currData.price,
+    currData.date,
+    setAvgPrice,
+    setBalance,
+    setHoldings,
+    setTradeLog,
+  ]);
 
-  return timer.time === 0 ? (
-    <Navigate
-      to="/game/result"
-      state={{
-        tradeLog,
-      }}
-    />
-  ) : (
+  return timer.time !== 0 ? (
     <div className={background[round]}>
       <header className="relative">
-        <p className="absolute z-20 top-9 left-7 text-lg">
+        <p className="absolute z-20 top-10 left-6 text-lg">
           {round + 1}/{maxPhase}
         </p>
-        {round <= 0 && <p className="absolute z-20 top-2 left-[5.4rem] text-lg">?</p>}
-        {round <= 1 && <p className="absolute z-20 top-9 left-[8.4rem] text-lg">?</p>}
-        {round <= 2 && <p className="absolute z-20 top-2 left-[11.4rem] text-lg">?</p>}
-        {round <= 3 && <p className="absolute z-20 top-9 left-[14.4rem] text-lg">?</p>}
-        {round <= 4 && <p className="absolute z-20 top-2 left-[17.4rem] text-lg">?</p>}
-        <GameRoundBar className="relative z-10" round={round} />
+        {round <= 0 && <p className="absolute z-20 top-3 left-[5.2rem] text-lg">?</p>}
+        {round <= 1 && <p className="absolute z-20 top-10 left-[8.2rem] text-lg">?</p>}
+        {round <= 2 && <p className="absolute z-20 top-3 left-[11.2rem] text-lg">?</p>}
+        {round <= 3 && <p className="absolute z-20 top-10 left-[14.2rem] text-lg">?</p>}
+        {round <= 4 && <p className="absolute z-20 top-3 left-[17.2rem] text-lg">?</p>}
+        <GameRoundBar className="relative z-10" round={round} roundLog={roundLog} />
         <div className="bg-[url('../src/assets/timerCurtain.svg')] h-[60px] w-[43px] absolute top-[94px] text-center">
-          <p className="mt-2 text-white">{timer.time}</p>
+          <p className="mt-3 text-lg text-white">{timer.time}</p>
         </div>
       </header>
-      <div className="text-center h-80 mt-8">
-        <div className="my-4">
-          <span className="text-sm">주가</span>
+      <div className="text-center h-80 mt-4">
+        <div className="my-6  text-white">
+          <span className="text-base">주가</span>
           <p className="text-3xl">{prettyKorNum(currData.price)}원</p>
         </div>
-        <div className="my-4">
-          <span className="text-sm">매입단가</span>
+        <div className="my-6">
+          <span className="text-base">매입단가</span>
           <p className="text-3xl">{prettyKorNum(avgPrice) || '0'}원</p>
         </div>
-        <div className="my-4">
-          <span className="text-sm">평가손익</span>
+        <div className="my-6">
+          <span className="text-base">평가손익</span>
           <p
             className={
-              userYield == 0
+              (currData.price - avgPrice) * holdings == 0
                 ? 'text-3xl'
-                : userYield < 0
-                ? 'text-3xl text-blue-400'
-                : 'text-3xl text-red-400'
+                : (currData.price - avgPrice) * holdings < 0
+                ? 'text-3xl text-[#5A75E5]'
+                : 'text-3xl text-[#EA4B4B]'
             }
           >
             {prettyKorNum((currData.price - avgPrice) * holdings) || '0'}원
           </p>
         </div>
-        <div className="my-4">
-          <span className="text-sm">총자산</span>
+        <div className="my-6">
+          <span className="text-base">총자산</span>
           <p
             className={
-              userYield == 0
+              (currData.price - avgPrice) * holdings == 0
                 ? 'text-3xl'
-                : userYield < 0
-                ? 'text-3xl text-blue-400'
-                : 'text-3xl text-red-400'
+                : (currData.price - avgPrice) * holdings < 0
+                ? 'text-3xl text-[#5A75E5]'
+                : 'text-3xl text-[#EA4B4B]'
             }
           >
             {prettyKorNum(balance + currData.price * holdings)}원
@@ -475,15 +497,45 @@ export default function Game({ maxSec, maxPhase }) {
       </div>
       {holdings === 0 ? (
         <button
-          className="bg-[url('../src/assets/buyBtn.png')] h-[82px] w-[296px] mt-16"
-          onClick={() => buy(currData.price, currData.date.substring(2))}
-        ></button>
+          className="relative text-[#EA4B4B] h-[82px] w-[296px] mt-16"
+          onClick={() => {
+            const newHoldings = Math.floor(balance / currData.price);
+            setAvgPrice(currData.price);
+            setBalance((prevBalance) => prevBalance - currData.price * newHoldings);
+            setHoldings(newHoldings);
+            setTradeLog(({ sell, buy }) => ({ sell, buy: [...buy, currData.date.substring(2)] }));
+          }}
+        >
+          <p className="absolute text-2xl top-[1.8rem] left-[4rem]">주식 매수</p>
+          <p className="absolute top-[3.2rem] left-[15.4rem]">BUY</p>
+          <TradingBtn mode="buy" />
+        </button>
       ) : (
         <button
-          className="bg-[url('../src/assets/sellBtn.png')] h-[82px] w-[296px] mt-16"
-          onClick={() => sell(currData.price, currData.date.substring(2))}
-        ></button>
+          className="relative text-[#5A75E5] h-[82px] w-[296px] mt-16"
+          onClick={() => {
+            setAvgPrice(0);
+            setBalance((prevBalance) => prevBalance + currData.price * holdings);
+            setHoldings(0);
+            setTradeLog(({ sell, buy }) => ({ sell: [...sell, currData.date.substring(2)], buy }));
+          }}
+        >
+          <p className="absolute text-2xl top-[1.8rem] left-[4rem]">주식 매도</p>
+          <p className="absolute top-[3.2rem] left-[15.4rem]">SELL</p>
+          <TradingBtn mode="sell" />
+        </button>
       )}
     </div>
+  ) : (
+    <Navigate
+      to="/game/result"
+      state={{
+        stockName: currData.stockName,
+        avgProfit: currStock.avgProfit,
+        profit: balance / roundStartBalance.current - 1,
+        yield: balance - roundStartBalance.current,
+        tradeLog,
+      }}
+    />
   );
 }

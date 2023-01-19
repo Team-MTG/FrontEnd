@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { gameRoundState } from './atoms/game';
 import { userBalanceState, userNameState } from './atoms/user';
 import { MAX_PHASE, MAX_SEC } from './config';
 import Error from './Error';
@@ -18,9 +19,11 @@ import Share from './SharePage';
 const useCleanUp = () => {
   const resetUserCash = useResetRecoilState(userBalanceState);
   const resetUserName = useResetRecoilState(userNameState);
+  const resetGameRound = useResetRecoilState(gameRoundState);
   const cleanUp = () => {
     resetUserCash();
     resetUserName();
+    resetGameRound();
   };
   return cleanUp;
 };

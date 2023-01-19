@@ -11,6 +11,12 @@ const useTimer = (maxTime, ms) => {
     };
   }, [maxTime, ms]);
 
+  useEffect(() => {
+    if (time === 0) {
+      clearInterval(intervalId.current);
+    }
+  }, [time]);
+
   const start = () => {
     if (intervalId.current === NULL)
       intervalId.current = setInterval(() => setTime((prev) => (prev === 0 ? prev : prev - 1)), ms);

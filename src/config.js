@@ -1,5 +1,5 @@
 export const SEED_MONEY = 5000000;
-export const MAX_SEC = 99;
+export const MAX_SEC = 30;
 export const MAX_PHASE = 5;
 export const MAX_STOCKS_INDEX = 27;
 export const URL_GITHUB = 'https://github.com/Team-MTG';

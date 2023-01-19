@@ -1,4 +1,10 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
+
+const gameSeedState = atom({
+  key: 'gameSeedState',
+  default: null,
+});
+export { gameSeedState };
 
 const gameOverState = atom({
   key: 'gameOverState',
