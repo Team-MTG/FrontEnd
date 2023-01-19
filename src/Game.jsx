@@ -415,6 +415,7 @@ export default function Game({ maxSec, maxPhase }) {
   const currStock = useRecoilValue(stockState)[round];
   const tick = useTimer(currStock.datas.length - 1, (maxSec * 1000) / currStock.datas.length);
   const currData = currStock.datas[currStock.datas.length - 1 - tick.time];
+  const roundLog = useRecoilValue(roundLogState);
   const [tradeLog, setTradeLog] = useState({ sell: [], buy: [] });
 
   // user info
@@ -530,10 +531,11 @@ export default function Game({ maxSec, maxPhase }) {
     <Navigate
       to="/game/result"
       state={{
-        stockName: currData.stockName,
+        stockName: currStock.stockName,
         avgProfit: currStock.avgProfit,
         profit: balance / roundStartBalance.current - 1,
         yield: balance - roundStartBalance.current,
+        datas: currStock.datas,
         tradeLog,
       }}
     />
