@@ -508,7 +508,7 @@ export default function Game({ maxSec, maxPhase }) {
           }}
         >
           <p className="absolute text-2xl top-[1.8rem] left-[4rem]">주식 매수</p>
-          <p className="absolute top-[3.2rem] left-[15.4rem]">BUY</p>
+          <p className="absolute top-[3.2rem] left-[15.3rem]">BUY</p>
           <TradingBtn mode="buy" />
         </button>
       ) : (
@@ -522,7 +522,7 @@ export default function Game({ maxSec, maxPhase }) {
           }}
         >
           <p className="absolute text-2xl top-[1.8rem] left-[4rem]">주식 매도</p>
-          <p className="absolute top-[3.2rem] left-[15.4rem]">SELL</p>
+          <p className="absolute top-[3.2rem] left-[15.2rem]">SELL</p>
           <TradingBtn mode="sell" />
         </button>
       )}
