@@ -14,6 +14,7 @@ const userRankState = atom({
   default: selector({
     key: 'userRankState/Default',
     get: async ({ get }) => {
+      return 1;
       if (get(gameOverState) === false || get(userNameState) === '') {
         throw new Error('비정상적인 Ranking 등록');
       }
