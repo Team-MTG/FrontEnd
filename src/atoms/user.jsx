@@ -38,7 +38,7 @@ export { userBalanceState };
 const userRateState = selector({
   key: 'userRateState',
   get: ({ get }) => {
-    const userCash = get(userCashState);
+    const userCash = get(userBalanceState);
     return userCash / SEED_MONEY - 1;
   },
 });
