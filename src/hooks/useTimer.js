@@ -1,34 +1,40 @@
 import { useEffect, useRef, useState } from 'react';
 
 const useTimer = (maxTime, ms) => {
-  const [time, setTime] = useState(0);
-  const [timeOver, setTimeOver] = useState(false);
-  let intervalId = useRef(null);
+  const [time, setTime] = useState(maxTime);
+  const intervalId = useRef(null);
 
   useEffect(() => {
-    intervalId.current = setInterval(() => setTime((prev) => prev + 1), ms);
+    intervalId.current = setInterval(() => setTime((prev) => (prev === 0 ? prev : prev - 1)), ms);
     return () => {
-      setTime(0);
-      setTimeOver(false);
       clearInterval(intervalId.current);
     };
   }, [maxTime, ms]);
 
   useEffect(() => {
-    if (time === maxTime) {
-      setTimeOver(true);
+    if (time === 0) {
       clearInterval(intervalId.current);
     }
-  }, [time, maxTime, setTimeOver]);
+  }, [time]);
 
-  const resetTimer = () => {
-    setTime(0);
-    setTimeOver(false);
-    clearInterval(intervalId.current);
-    intervalId.current = setInterval(() => setTime((prev) => prev + 1), ms);
+  const start = () => {
+    if (intervalId.current === NULL)
+      intervalId.current = setInterval(() => setTime((prev) => (prev === 0 ? prev : prev - 1)), ms);
   };
 
-  return { time, timeOver, resetTimer };
+  const stop = () => {
+    if (intervalId.current !== NULL) {
+      clearInterval(intervalId.current);
+      intervalId.current = NULL;
+    }
+  };
+
+  const reset = () => {
+    setTime(0);
+    stop();
+  };
+
+  return { time, start, stop, reset };
 };
 
 export default useTimer;

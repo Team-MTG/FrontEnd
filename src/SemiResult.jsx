@@ -8,9 +8,13 @@ import { ReactComponent as RoundPin } from './assets/roundPin.svg';
 import flagBg from './assets/flagBg.svg';
 import { ReactComponent as Plane } from './assets/plane.svg';
 import { ReactComponent as Dot } from './assets/dot.svg';
+import { useSetRecoilState } from 'recoil';
+import { gameRoundState } from './atoms/game';
 
 export default function SemiResult({ round }) {
   const navigate = useNavigate();
+
+  const setRound = useSetRecoilState(gameRoundState);
 
   /* 포인트 찍기 */
   const customPoint = ({ size, color, borderWidth, borderColor, datum }) => {
@@ -35,7 +39,11 @@ export default function SemiResult({ round }) {
         </div>
         <div className="w-96 h-36 absolute left-0 right-0 mx-auto mt-8">
           <img className="relative top-2 left-0 right-0 mx-auto" src={roundIcon} width={140} />
-          <RoundPin className="absolute top-0 left-0 right-0 mx-auto" fill={theme.colors.blue} /> {/*수정*/}
+          <RoundPin
+            className="absolute top-0 left-0 right-0 mx-auto"
+            fill={theme.colors.blue}
+          />{' '}
+          {/*수정*/}
         </div>
       </span>
       <div className="h-28"></div>
@@ -72,7 +80,13 @@ export default function SemiResult({ round }) {
           pointSize={32}
         />
       </div>
-      <button className="mb-1">
+      <button
+        className="mb-1"
+        onClick={() => {
+          setRound((prev) => prev + 1);
+          navigate('/game');
+        }}
+      >
         <img src={nextBtn} />
       </button>
     </div>

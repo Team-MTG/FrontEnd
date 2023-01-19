@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { rankingsState, pageNum, rankList } from './atoms/rankings';
-import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
+import { userBalanceState, userNameState, userRankState, userRateState } from './atoms/user';
 import { generateRandomNumList } from './utils/random';
 import { MAX_PHASE } from './config';
 import replayBtn from './assets/replayBtn.svg';
@@ -37,7 +37,7 @@ function RankItem({ nickName, profit, total, rank }) {
 
 function Rankings() {
   const rankings = useRecoilValue(rankingsState);
-  const userCash = useRecoilValue(userCashState);
+  const userCash = useRecoilValue(userBalanceState);
   const userName = useRecoilValue(userNameState);
   const userRate = useRecoilValue(userRateState);
   const userRank = useRecoilValue(userRankState);

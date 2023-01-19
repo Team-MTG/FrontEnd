@@ -4,7 +4,7 @@ import { generateRandomNumList } from './utils/random';
 import { MAX_PHASE } from './config';
 import { rankingsState } from './atoms/rankings';
 import { useEffect } from 'react';
-import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
+import { userBalanceState, userNameState, userRankState, userRateState } from './atoms/user';
 import replayBtn from './assets/replayBtn.svg';
 
 function RankItem({ nickName, profit, total, rank }) {
@@ -38,7 +38,7 @@ function SharePage() {
   }, []);
 
   const rankings = useRecoilValue(rankingsState);
-  const userCash = useRecoilValue(userCashState);
+  const userCash = useRecoilValue(userBalanceState);
   const userRate = useRecoilValue(userRateState);
   const userRank = useRecoilValue(userRankState);
 
