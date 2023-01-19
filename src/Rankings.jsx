@@ -107,10 +107,10 @@ function Rankings() {
           <div className=" border-[1px] border-gray-600  w-[280px] h-[70px]  mt-[3vh] p-1 bg-white">
             <div className="p-1 w-[268px] h-[58px] bg-amber-300">
               <p className="ml-2">나의 순위 : {userRank}위</p>
-              <div className="grid grid-rows-3 grid-flow-col gap-4 ml-2">
-                <p className="row-span-3">{userCash.toLocaleString('ko-KR')} 원</p>
-                <p className="text-xs row-span-2 col-span-2">
-                  &nbsp; &#40;{(userRate * 100).toFixed(2)}&#41;%
+              <div className="flex ml-2">
+                <p className="">
+                  {userCash.toLocaleString('ko-KR')} 원
+                  <span className="text-xs">&nbsp; &#40;{(userRate * 100).toFixed(2)}&#41;%</span>
                 </p>
               </div>
             </div>
