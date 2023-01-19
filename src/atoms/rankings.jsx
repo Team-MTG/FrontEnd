@@ -14,11 +14,25 @@ const rankList = atom({
 });
 export { rankList };
 
+const isLoaded = atom({
+  key: 'isLoaded',
+  default: false,
+});
+export { isLoaded };
+
 const rankingsState = atom({
   key: 'rankingsState',
   default: selector({
     key: 'rankingsState/Default',
     get: async ({ get }) => {
+      return [
+        {
+          nickname: 'n',
+          ranking: 1,
+          profit: 1.2,
+          totalYield: 999,
+        },
+      ];
       if (get(userRankState) === 0) {
         return null;
       }
