@@ -83,7 +83,15 @@ function Rankings() {
               const shareUrl = `${window.location.origin}/share/${encodeURIComponent(
                 userRank.sharedNumber
               )}`;
-              navigator.clipboard.writeText(shareUrl).then(() => alert('공유링크 복사 완료!'));
+              // navigator.clipboard.writeText(shareUrl).then(() => alert('공유링크 복사 완료!'));
+
+              const textArea = document.createElement('textarea');
+              document.body.appendChild(textArea);
+              textArea.value = shareUrl;
+              textArea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textArea);
+              alert('공유링크 복사 완료!');
             }}
           >
             <img src={shareBtn} />

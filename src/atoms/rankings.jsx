@@ -30,7 +30,7 @@ const rankingsState = atom({
         return null;
       }
       const res = await axios.get(`${import.meta.env.VITE_API}/api/rankings`, {
-        params: { start: 1, end: get(totalUserCountState) },
+        params: { start: 1, end: get(totalUserCountState) + 1 },
       });
       const rankings = res.data;
       console.log(rankings);
