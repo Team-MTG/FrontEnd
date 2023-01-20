@@ -16,18 +16,15 @@ const userRankState = atom({
     get: async ({ get }) => {
       const roundLog = get(roundLogState);
       const userName = get(userNameState);
-      const body = {
+      if (userName === '') {
+        throw new Error('비정상적인 Ranking 등록');
+      }
+      const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, {
         nickname: userName,
         totalYield: get(userBalanceState) - SEED_MONEY,
         totalProfit: get(userRateState) * 100,
         gameInfo: roundLog,
-      };
-      console.log(body);
-      if (userName === '') {
-        throw new Error('비정상적인 Ranking 등록');
-      }
-      const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, body);
-      console.log(res.data);
+      });
       return res.data;
     },
   }),

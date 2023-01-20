@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { rankingsState, pageNum, rankList } from './atoms/rankings';
 import { userBalanceState, userNameState, userRankState, userRateState } from './atoms/user';
@@ -34,9 +34,10 @@ function RankItem({ nickName, profit, total, rank }) {
 }
 
 function Rankings() {
+  const location = useLocation();
   const rankings = useRecoilValue(rankingsState);
   const userCash = useRecoilValue(userBalanceState);
-  const userRank = useRecoilValue(userRankState);
+  const userRank = location.state.userRank;
   const rankMaxCount = useRecoilValue(totalUserCountState);
 
   const [pageCount, setPage] = useRecoilState(pageNum);
