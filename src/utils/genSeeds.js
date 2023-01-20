@@ -8,7 +8,6 @@ const genSeeds = (number, stockCount) => {
     const seed = '' + stock + parts[index];
     return '0'.repeat(4 - seed.length) + seed;
   });
-  console.log(seeds);
   return seeds;
 };
 export default genSeeds;

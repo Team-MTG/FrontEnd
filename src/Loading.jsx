@@ -27,7 +27,7 @@ const Loading = ({ msg }) => {
   return (
     <div className="bg-[#63C9EF] h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
       <Spinner />
-      <p className="mt-8">{msg}</p>
+      <p className="font-tn text-white mt-8">{msg}</p>
     </div>
   );
 };
