@@ -108,14 +108,14 @@ function App() {
             cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="결과 분석 중..." />}>
-              <SemiResult />
+              <Protect when={userName === ''} to="/">
+                <SemiResult />
+              </Protect>
             </Suspense>
           </ErrorBoundary>
         }
       />
-      <Route path="/dev" element={<Loading msg="로딩중..." />} />
       <Route path="*" element={<NotFound msg="잘못된 주소입니다." />} />
-      <Route path="/rank" element={<Rankings />} />
     </Routes>
   );
 }
