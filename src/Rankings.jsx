@@ -6,10 +6,9 @@ import { userBalanceState, userNameState, userRankState, userRateState } from '.
 import { generateRandomNumList } from './utils/random';
 import { MAX_PHASE } from './config';
 import replayBtn from './assets/replayBtn.svg';
+import shareBtn from './assets/shareBtn.svg';
 import useIntersect from './hooks/useIntersect'; //무한스크롤
-import { useRef } from 'react';
-import axios from 'axios';
-import Loading from './Loading';
+import myRankShadow from './assets/myRankShadow.svg';
 
 function RankItem({ nickname, profit, total, rank }) {
   if (rank % 2 != 0) {
@@ -42,12 +41,12 @@ function Rankings() {
   const userCash = useRecoilValue(userBalanceState);
   const userName = useRecoilValue(userNameState);
   const userRate = useRecoilValue(userRateState);
-  const userRank = useRecoilValue(userRankState);
+  const userState = useRecoilValue(userRankState);
+  const userRank = userState.rank;
+  const shareNum = userState.shareNum;
 
   const [pageCount, setPage] = useRecoilState(pageNum);
-  //const pageCount = useRecoilValue(pageNum);
   const [list, setList] = useRecoilState(rankList);
-  // const [list, setList] = useState([]);
   const navigate = useNavigate();
 
   const [isLoaded, setIsLoaded] = useState(true);
@@ -74,7 +73,8 @@ function Rankings() {
   //현재 주소 가져옴
   //const url = encodeURI(window.location.href);
   //테스트용으로 가능한 주소인 노션 주소 넣음
-  const url = 'http://localhost:5173/share' + '/' + userName; //url에는 현재 주소값을 넣어줌;
+  const url = 'http://localhost:5173/share' + '/' + shareNum; //url에는 현재 주소값을 넣어줌;
+  //const url = 'https://motugame.shop' + '/' + shareNum;
 
   //url 복사
   const copyURL = () => {
@@ -103,9 +103,16 @@ function Rankings() {
       {loadable.state === 'loading' && pageCount === 1 ? (
         <div className="text-lg">{pageCount}</div>
       ) : (
-        <div className="bg-[url('../src/assets/bg-rankpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
-          <div className=" border-[1px] border-gray-600  w-[280px] h-[70px]  mt-[3vh] p-1 bg-white">
-            <div className="p-1 w-[268px] h-[58px] bg-amber-300">
+        <div className="bg-[url('../src/assets/bg-rankpage.svg')] relative bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+          <button
+            className="absolute pointer-events-auto right-14 bg-[url('../src/assets/shareBtn.svg')]"
+            onClick={copyURL}
+          >
+            <img src={shareBtn} />
+          </button>
+
+          <div className=" border-[1px] border-gray-600  w-[280px] h-18  mt-[3vh] p-1 bg-white">
+            <div className="p-1 w- full h-full bg-amber-300">
               <p className="ml-2">나의 순위 : {userRank}위</p>
               <div className="flex ml-2">
                 <p className="">
@@ -115,8 +122,8 @@ function Rankings() {
               </div>
             </div>
           </div>
-          <div className=" mt-1 border-[1px] border-gray-600 w-[280px] h-[400px] p-1 bg-white">
-            <div className="p-1 w-[268px] h-[58px] bg-amber-300">
+          <div className=" mt-1 border-[1px] border-gray-600 w-[280px] h-[24rem] p-1 bg-white">
+            <div className="p-1 w-full h-19 bg-amber-300">
               <p className="ml-2 text-lg">전체 순위</p>
               <div className="flex">
                 <p className="basis-1/5 ml-2">순위</p>
@@ -124,29 +131,27 @@ function Rankings() {
                 <p className="basis-1/2 ml-2 grid justify-items-end">금액 &#40;수익률&#41;</p>
               </div>
             </div>
-            <div className="h-[310px] overflow-y-scroll mt-1">
+            <div className="h-full overflow-y-scroll mt-1">
               {list.map((rank) => (
                 <RankItem
-                  key={rank.ranking}
-                  nickName={rank.nickname}
+                  key={rank.rank}
+                  nickname={rank.nickName}
                   profit={rank.profit.toFixed(2)}
-                  total={rank.totalYield}
-                  rank={rank.ranking}
+                  total={rank.yield}
+                  rank={rank.rank}
                 />
               ))}
               {isLoaded && (
-                <p className="mt-3" ref={setRef}>
+                <div className="mt-3" ref={setRef}>
                   Loading...
-                </p>
+                </div>
               )}
             </div>
           </div>
+
           <button className="mt-1 bg-[url('../src/assets/replayBtn.svg')]" onClick={replay}>
             <img src={replayBtn} />
           </button>
-          <footer className="text-sm text-gray-700 mt-4">
-            <button onClick={copyURL}>url 복사</button>
-          </footer>
         </div>
       )}
     </>

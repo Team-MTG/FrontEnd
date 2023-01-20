@@ -14,7 +14,7 @@ const userRankState = atom({
   default: selector({
     key: 'userRankState/Default',
     get: async ({ get }) => {
-      return 1;
+      return { rank: 1, shareNum: 1 };
       if (get(gameOverState) === false || get(userNameState) === '') {
         throw new Error('비정상적인 Ranking 등록');
       }
@@ -23,7 +23,7 @@ const userRankState = atom({
         totalCash: get(userCashState),
         rate: get(userRateState) * 100,
       });
-      return res.data.rank;
+      return { rank: res.data.rank, sharedNum: res.data.sharedNumber };
     },
   }),
 });

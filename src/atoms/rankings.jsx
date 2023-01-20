@@ -28,9 +28,9 @@ const rankingsState = atom({
       return [
         {
           nickname: 'n',
-          ranking: 1,
+          rank: 1,
           profit: 1.2,
-          totalYield: 999,
+          yield: 999,
         },
       ];
       if (get(userRankState) === 0) {

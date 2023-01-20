@@ -88,7 +88,7 @@ function App() {
         }
       />
       <Route
-        path="/share/:username"
+        path="/share/:sharedNumber"
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
