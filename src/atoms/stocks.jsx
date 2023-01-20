@@ -1,20 +1,24 @@
 import axios from 'axios';
-import { selectorFamily } from 'recoil';
+import { selector } from 'recoil';
+import { gameSeedState } from './game';
 
-const stocksState = selectorFamily({
-  key: 'stocksState',
-  get: (stockIndexesList) => async () => {
-    if (stockIndexesList.length === 0) {
-      return [];
-    }
-    const { data: stocks } = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {
-      params: { index: stockIndexesList },
+const stockState = selector({
+  key: 'stockState',
+  get: async ({ get }) => {
+    const gameSeeds = get(gameSeedState);
+    if (gameSeeds === null) throw new Error('올바른 시드가 아닙니다.');
+    const {
+      data: { stockAverages, stockPrices },
+    } = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {
+      params: { seed: gameSeeds },
       paramsSerializer: {
         indexes: null,
       },
     });
-    return stocks;
+    return stockPrices.map((stock, index) => ({
+      ...stock,
+      avgProfit: stockAverages[index].userAverageProfit,
+    }));
   },
 });
-
-export { stocksState };
+export { stockState };

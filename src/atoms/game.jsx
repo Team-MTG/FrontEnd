@@ -1,7 +1,19 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 
-const gameOverState = atom({
-  key: 'gameOverState',
-  default: false,
+const gameSeedState = atom({
+  key: 'gameSeedState',
+  default: null,
 });
-export { gameOverState };
+export { gameSeedState };
+
+const gameRoundState = atom({
+  key: 'gameRoundState',
+  default: 0,
+});
+export { gameRoundState };
+
+const roundLogState = atom({
+  key: 'roundLogState',
+  default: [],
+});
+export { roundLogState };

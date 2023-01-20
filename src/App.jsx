@@ -1,7 +1,8 @@
-import { Suspense, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
-import { userCashState, userNameState } from './atoms/user';
+import { gameRoundState } from './atoms/game';
+import { userBalanceState, userNameState } from './atoms/user';
 import { MAX_PHASE, MAX_SEC } from './config';
 import Error from './Error';
 import ErrorBoundary from './ErrorBoundary';
@@ -9,30 +10,27 @@ import Game from './Game';
 import Loading from './Loading';
 import MainPage from './MainPage';
 import NotFound from './NotFound';
+import Protect from './Protect';
 import Rankings from './Rankings';
 import Result from './Result';
-//
+import SemiResult from './SemiResult';
 import Share from './SharePage';
 
 const useCleanUp = () => {
-  const resetUserCash = useResetRecoilState(userCashState);
+  const resetUserCash = useResetRecoilState(userBalanceState);
   const resetUserName = useResetRecoilState(userNameState);
+  const resetGameRound = useResetRecoilState(gameRoundState);
   const cleanUp = () => {
     resetUserCash();
     resetUserName();
+    resetGameRound();
   };
   return cleanUp;
 };
 
 function App() {
   const cleanUp = useCleanUp();
-  const location = useLocation();
-  const navigate = useNavigate();
   const userName = useRecoilValue(userNameState);
-
-  useEffect(() => {
-    if (location.pathname !== '/' && userName === '') navigate('/', { replace: true });
-  }, []);
 
   return (
     <Routes>
@@ -52,7 +50,9 @@ function App() {
             cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="주식 정보를 가져오는 중..." />}>
-              <Game maxSec={MAX_SEC} maxPhase={MAX_PHASE} />
+              <Protect when={userName === ''} to="/">
+                <Game maxSec={MAX_SEC} maxPhase={MAX_PHASE} />
+              </Protect>
             </Suspense>
           </ErrorBoundary>
         }
@@ -65,7 +65,9 @@ function App() {
             cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="랭킹을 불러오는 중..." />}>
-              <Rankings />
+              <Protect when={userName === ''} to="/">
+                <Rankings />
+              </Protect>
             </Suspense>
           </ErrorBoundary>
         }
@@ -78,13 +80,15 @@ function App() {
             cleanUp={() => cleanUp()}
           >
             <Suspense fallback={<Loading msg="랭킹을 서버에 등록하는 중..." />}>
-              <Result />
+              <Protect when={userName === ''} to="/">
+                <Result />
+              </Protect>
             </Suspense>
           </ErrorBoundary>
         }
       />
       <Route
-        path="/share/:username"
+        path="/share/:sharedNumber"
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
@@ -92,6 +96,21 @@ function App() {
           >
             <Suspense fallback={<Loading msg="접속중..." />}>
               <Share />
+            </Suspense>
+          </ErrorBoundary>
+        }
+      />
+      <Route
+        path="/game/result"
+        element={
+          <ErrorBoundary
+            fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
+            cleanUp={() => cleanUp()}
+          >
+            <Suspense fallback={<Loading msg="결과 분석 중..." />}>
+              <Protect when={userName === ''} to="/">
+                <SemiResult />
+              </Protect>
             </Suspense>
           </ErrorBoundary>
         }

@@ -1,75 +1,100 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { generateRandomNumList } from './utils/random';
-import { MAX_PHASE } from './config';
-import { rankingsState } from './atoms/rankings';
-import { useEffect } from 'react';
-import { userCashState, userNameState, userRankState, userRateState } from './atoms/user';
+import { MAX_PHASE, SEED_MONEY } from './config';
+import { useEffect, useState } from 'react';
+import replayBtn from './assets/sharePlay.svg';
 
-function RankItem({ nickName, profit, total, rank }) {
-  return (
-    <div className="w-full rounded-lg border-2 border-gray-500 mt-3 p-4 flex">
-      <div className="basis-1/4 ">{rank}</div>
-      <div className="basis-1/4">
-        <p>{nickName}</p>
-        <p className="text-gray-500">{profit} %</p>
+import { sharingsState, shareList } from './atoms/sharings';
+import prettyKorNum from './utils/prettyKorNum';
+
+function RankItem({ nickname, profit, total, rank }) {
+  if (rank % 2 != 0) {
+    return (
+      <div className="w-full bg-zinc-700 h-16 p-2 flex">
+        <p className="basis-1/5 ml-2 text-white">{rank}위</p>
+        <p className="basis-1/5 ml-2 text-amber-300">{nickname}</p>
+        <div className="basis-1/2 grid justify-items-end text-white">
+          <div>{prettyKorNum(total)}원</div>
+          <div className="text-sm">{profit}%</div>
+        </div>
       </div>
-      <p className="basis-1/2 grid justify-items-end">{total.toLocaleString('ko-KR')}원</p>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="w-full bg-zinc-500 h-16 p-2 flex">
+        <p className="basis-1/5 ml-2 text-white">{rank}위</p>
+        <p className="basis-1/5 ml-2 text-amber-300">{nickname}</p>
+        <div className="basis-1/2 grid justify-items-end text-white">
+          <div>{prettyKorNum(total)}원</div>
+          <div className="text-sm">{profit} %</div>
+        </div>
+      </div>
+    );
+  }
 }
 
 function SharePage() {
   const navigate = useNavigate();
 
-  let { params } = useParams();
+  let params = useParams();
 
-  const [userName, setUserName] = useRecoilState(userNameState);
+  const sharing = useRecoilValue(sharingsState(params.sharedNumber));
+
+  const [list, setList] = useRecoilState(shareList);
+
+  const myNickname = sharing.nickname;
+  const [myRank, setMyRank] = useState(sharing.myRank);
+  const [myProfit, setMyProfit] = useState(sharing.myProfit);
+  const [myYield, setMyYield] = useState(sharing.myYield);
 
   useEffect(() => {
-    setUserName(params);
+    setList(sharing.otherRanking);
   }, []);
-
-  const rankings = useRecoilValue(rankingsState);
-  const userCash = useRecoilValue(userCashState);
-  const userRate = useRecoilValue(userRateState);
-  const userRank = useRecoilValue(userRankState);
 
   //게임하기 버튼 클릭 시
   const gamePlay = () => {
-    navigate('/', {
-      state: {
-        stockIndexList: generateRandomNumList(MAX_PHASE, 27),
-      },
-    });
+    navigate('/', { replace: true });
   };
 
   return (
-    <div className="h-screen max-w-sm mx-auto flex flex-col justify-center items-center">
-      <div className="w-full rounded-lg border-4 border-orange-300 p-4 flex">
-        <div className="basis-1/4 ">{userRank}</div>
-        <div className="basis-1/4">
-          <p>{userName}</p>
-          <p className="text-gray-500">{profit} %</p>
+    <div className="bg-[url('../src/assets/bg-rankpage.svg')] relative bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+      <div className=" top-0 left-0 border-[1px] border-gray-700  w-[280px] h-[70px]  mt-[3vh] p-1 bg-white">
+        <div className="p-1 w-full h-full bg-amber-300">
+          <p className="ml-2">
+            {myNickname}&nbsp;님의 순위 : {myRank}위
+          </p>
+          <div className="flex ml-2">
+            <p>
+              {prettyKorNum(myYield + SEED_MONEY)}원
+              <span className="text-xs">&nbsp; &#40;{myProfit.toFixed(2)}&#41;%</span>
+            </p>
+          </div>
         </div>
-        <p className="basis-1/2 grid justify-items-end">{total.toLocaleString('ko-KR')} 원</p>
       </div>
-      <div className="overflow-y-scroll w-full">
-        {rankings.map((rank) => (
-          <RankItem
-            key={rank.id}
-            rank={rank.rank}
-            nickName={rank.name}
-            profit={rank.rate.toFixed(2)}
-            total={rank.totalCash}
-          />
-        ))}
+      <div className=" mt-1 border-[1px] border-gray-700 w-[280px] h-[24rem] p-1 bg-white">
+        <div className="p-1 w-full h-14 bg-amber-300">
+          <p className="ml-2 text-lg">전체 순위</p>
+          <div className="flex">
+            <p className="basis-1/5 ml-2">순위</p>
+            <p className="basis-1/5 ml-2">탑승객</p>
+            <p className="basis-1/2 ml-2 grid justify-items-end">금액 &#40;수익률&#41;</p>
+          </div>
+        </div>
+        <div className="h-[21rem] overflow-y-scroll mt-1">
+          {list.map((rank) => (
+            <RankItem
+              key={rank.idx}
+              nickname={rank.nickname}
+              profit={rank.profit.toFixed(2)}
+              total={rank.yield + SEED_MONEY}
+              rank={rank.rank}
+            />
+          ))}
+        </div>
       </div>
-      <button
-        className="my-10 w-full bg-orange-400 disabled:bg-gray-300 border-2 rounded-2xl border-gray-800 border-solid"
-        onClick={gamePlay}
-      >
-        게임하러 고고!
+      <button className="mt-2 bg-[url('../src/assets/replayBtn.svg')]" onClick={gamePlay}>
+        <img src={replayBtn} />
       </button>
     </div>
   );
