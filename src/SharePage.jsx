@@ -81,7 +81,7 @@ function SharePage() {
             <p className="basis-1/2 ml-2 grid justify-items-end">금액 &#40;수익률&#41;</p>
           </div>
         </div>
-        <div className="h-[19.5rem] overflow-y-scroll mt-1">
+        <div className="h-[19.5rem] overflow-y-scroll mt-1 no-scrollbar">
           {list.map((rank) => (
             <RankItem
               key={rank.idx}
