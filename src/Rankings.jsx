@@ -6,6 +6,7 @@ import { userBalanceState, userNameState, userRankState, userRateState } from '.
 import { generateRandomNumList } from './utils/random';
 import { MAX_PHASE } from './config';
 import replayBtn from './assets/replayBtn.svg';
+import shareBtn from './assets/shareBtn.svg';
 import useIntersect from './hooks/useIntersect'; //무한스크롤
 import { useRef } from 'react';
 import axios from 'axios';
@@ -38,9 +39,7 @@ function Rankings() {
   const userRank = useRecoilValue(userRankState);
 
   const [pageCount, setPage] = useRecoilState(pageNum);
-  //const pageCount = useRecoilValue(pageNum);
   const [list, setList] = useRecoilState(rankList);
-  // const [list, setList] = useState([]);
   const navigate = useNavigate();
 
   const [isLoaded, setIsLoaded] = useState(true);
@@ -76,7 +75,13 @@ function Rankings() {
       {loadable.state === 'loading' && pageCount === 1 ? (
         <div className="text-lg">{pageCount}</div>
       ) : (
-        <div className="bg-[url('../src/assets/bg-rankpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+        <div className="relative bg-[url('../src/assets/bg-rankpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
+          <button
+            className="absolute pointer-events-auto right-14 bg-[url('../src/assets/shareBtn.svg')]"
+            onClick={copyURL}
+          >
+            <img src={shareBtn} />
+          </button>
           <div className=" border-[1px] border-gray-600  w-[280px] h-[70px]  mt-[3vh] p-1 bg-white">
             <div className="p-1 w-[268px] h-[58px] bg-amber-300">
               <p className="ml-2">나의 순위 : {userRank.rank}위</p>
@@ -88,8 +93,8 @@ function Rankings() {
               </div>
             </div>
           </div>
-          <div className=" mt-1 border-[1px] border-gray-600 w-[280px] h-[400px] p-1 bg-white">
-            <div className="p-1 w-[268px] h-[58px] bg-amber-300">
+          <div className=" mt-1 border-[1px] border-gray-600 w-[280px] h-[24rem] p-1 bg-white">
+            <div className="p-1 w-full h-19 bg-amber-300">
               <p className="ml-2 text-lg">전체 순위</p>
               <div className="flex">
                 <p className="basis-1/5 ml-2">순위</p>
@@ -103,32 +108,20 @@ function Rankings() {
                   key={index}
                   nickName={rank.nickname}
                   profit={rank.profit.toFixed(2)}
-                  total={rank.totalYield}
-                  rank={rank.ranking}
+                  total={rank.yield}
+                  rank={rank.rank}
                 />
               ))}
               {isLoaded && (
-                <p className="mt-3" ref={setRef}>
+                <div className="mt-3" ref={setRef}>
                   Loading...
-                </p>
+                </div>
               )}
             </div>
           </div>
           <button className="mt-1" onClick={() => navigate('/')}>
             <img src={replayBtn} />
           </button>
-          <footer className="text-sm text-gray-700 mt-4">
-            <button
-              onClick={() => {
-                const shareUrl = `${window.location.origin}/share?sharedNumber${encodeURIComponent(
-                  '123'
-                )}`;
-                window.navigator.clipboard.writeText(shareUrl).then(() => console.log('복사완료!'));
-              }}
-            >
-              url 복사
-            </button>
-          </footer>
         </div>
       )}
     </>
