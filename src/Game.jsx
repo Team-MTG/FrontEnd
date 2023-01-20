@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { gameRoundState, roundLogState, tradeLogState } from './atoms/game';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { gameRoundState, roundLogState } from './atoms/game';
 import { stockState } from './atoms/stocks';
 import { userBalanceState } from './atoms/user';
 import useTimer from './hooks/useTimer';
@@ -409,6 +409,8 @@ const TradingBtn = ({ mode }) => {
 };
 
 export default function Game({ maxSec, maxPhase }) {
+  const navigate = useNavigate();
+
   // game info
   const round = useRecoilValue(gameRoundState);
   const timer = useTimer(maxSec, 1000);
@@ -425,14 +427,17 @@ export default function Game({ maxSec, maxPhase }) {
   const [holdings, setHoldings] = useState(0); // 보유수량
 
   useEffect(() => {
-    if (timer.time === 0 && holdings !== 0) {
+    if (tick.time === 0 && holdings !== 0) {
       setAvgPrice(0);
       setBalance((prevBalance) => prevBalance + currData.price * holdings);
       setHoldings(0);
-      setTradeLog(({ sell, buy }) => ({ sell: [...sell, currData.date.substring(2)], buy }));
+      setTradeLog(({ sell, buy }) => {
+        console.log('sell');
+        return { sell: [...sell, currData.date], buy };
+      });
     }
   }, [
-    timer.time,
+    tick.time,
     holdings,
     currData.price,
     currData.date,
@@ -442,7 +447,7 @@ export default function Game({ maxSec, maxPhase }) {
     setTradeLog,
   ]);
 
-  return timer.time !== 0 ? (
+  return tick.time !== 0 || holdings !== 0 ? (
     <div className={background[round]}>
       <header className="relative">
         <p className="absolute z-20 top-10 left-6 text-lg">
@@ -504,7 +509,7 @@ export default function Game({ maxSec, maxPhase }) {
             setAvgPrice(currData.price);
             setBalance((prevBalance) => prevBalance - currData.price * newHoldings);
             setHoldings(newHoldings);
-            setTradeLog(({ sell, buy }) => ({ sell, buy: [...buy, currData.date.substring(2)] }));
+            setTradeLog(({ sell, buy }) => ({ sell, buy: [...buy, currData.date] }));
           }}
         >
           <p className="absolute text-2xl top-[1.8rem] left-[4rem]">주식 매수</p>
@@ -518,7 +523,7 @@ export default function Game({ maxSec, maxPhase }) {
             setAvgPrice(0);
             setBalance((prevBalance) => prevBalance + currData.price * holdings);
             setHoldings(0);
-            setTradeLog(({ sell, buy }) => ({ sell: [...sell, currData.date.substring(2)], buy }));
+            setTradeLog(({ sell, buy }) => ({ sell: [...sell, currData.date], buy }));
           }}
         >
           <p className="absolute text-2xl top-[1.8rem] left-[4rem]">주식 매도</p>

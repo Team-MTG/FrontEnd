@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { userNameState } from './atoms/user';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { userBalanceState, userNameState } from './atoms/user';
 import { MAX_PHASE, URL_GITHUB, URL_NOTION } from './config';
 import { totalStockCountState, totalUserCountState } from './atoms/info';
 import LOGO from './assets/logo.png';
 import BARCODE from './assets/barcode.png';
-import { gameSeedState } from './atoms/game';
+import { gameSeedState, roundLogState } from './atoms/game';
 import genSeeds from './utils/genSeeds';
 
 function MainPage() {
@@ -13,6 +13,8 @@ function MainPage() {
   const [userName, setUserName] = useRecoilState(userNameState);
   const stockCount = useRecoilValue(totalStockCountState);
   const setGameSeeds = useSetRecoilState(gameSeedState);
+  const resetBalance = useResetRecoilState(userBalanceState);
+  const resetRoundLog = useResetRecoilState(roundLogState);
   const totalUserCount = useRecoilValue(totalUserCountState);
 
   return (
@@ -44,6 +46,8 @@ function MainPage() {
           onClick={(e) => {
             e.preventDefault();
             setGameSeeds(genSeeds(MAX_PHASE, stockCount));
+            resetBalance();
+            resetRoundLog();
             navigate('/game');
           }}
         >
