@@ -1,11 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { generateRandomNumList } from './utils/random';
-import { MAX_PHASE } from './config';
+import { MAX_PHASE, SEED_MONEY } from './config';
 import { useEffect, useState } from 'react';
 import replayBtn from './assets/sharePlay.svg';
 
 import { sharingsState, shareList } from './atoms/sharings';
+import prettyKorNum from './utils/prettyKorNum';
 
 function RankItem({ nickname, profit, total, rank }) {
   if (rank % 2 != 0) {
@@ -14,8 +15,8 @@ function RankItem({ nickname, profit, total, rank }) {
         <p className="basis-1/5 ml-2 text-white">{rank}위</p>
         <p className="basis-1/5 ml-2 text-amber-300">{nickname}</p>
         <div className="basis-1/2 grid justify-items-end text-white">
-          <div>{total.toLocaleString('ko-KR')}원</div>
-          <div className="text-sm">{profit} %</div>
+          <div>{prettyKorNum(total)}원</div>
+          <div className="text-sm">{profit}%</div>
         </div>
       </div>
     );
@@ -25,7 +26,7 @@ function RankItem({ nickname, profit, total, rank }) {
         <p className="basis-1/5 ml-2 text-white">{rank}위</p>
         <p className="basis-1/5 ml-2 text-amber-300">{nickname}</p>
         <div className="basis-1/2 grid justify-items-end text-white">
-          <div>{total.toLocaleString('ko-KR')}원</div>
+          <div>{prettyKorNum(total)}원</div>
           <div className="text-sm">{profit} %</div>
         </div>
       </div>
@@ -53,11 +54,7 @@ function SharePage() {
 
   //게임하기 버튼 클릭 시
   const gamePlay = () => {
-    navigate('/', {
-      state: {
-        stockIndexList: generateRandomNumList(MAX_PHASE, 27),
-      },
-    });
+    navigate('/', { replace: true });
   };
 
   return (
@@ -69,8 +66,8 @@ function SharePage() {
           </p>
           <div className="flex ml-2">
             <p>
-              {myYield.toLocaleString('ko-KR')} 원
-              <span className="text-xs">&nbsp; &#40;{(myProfit * 100).toFixed(2)}&#41;%</span>
+              {prettyKorNum(myYield + SEED_MONEY)}원
+              <span className="text-xs">&nbsp; &#40;{myProfit.toFixed(2)}&#41;%</span>
             </p>
           </div>
         </div>
@@ -90,7 +87,7 @@ function SharePage() {
               key={rank.idx}
               nickname={rank.nickname}
               profit={rank.profit.toFixed(2)}
-              total={rank.yield}
+              total={rank.yield + SEED_MONEY}
               rank={rank.rank}
             />
           ))}

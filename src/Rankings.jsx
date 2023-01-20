@@ -4,7 +4,7 @@ import { useRecoilValue, useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { rankingsState, pageNum, rankList } from './atoms/rankings';
 import { userBalanceState, userNameState, userRankState, userRateState } from './atoms/user';
 import { generateRandomNumList } from './utils/random';
-import { MAX_PHASE } from './config';
+import { MAX_PHASE, SEED_MONEY } from './config';
 import replayBtn from './assets/replayBtn.svg';
 import shareBtn from './assets/shareBtn.svg';
 import useIntersect from './hooks/useIntersect'; //무한스크롤
@@ -116,7 +116,7 @@ function Rankings() {
                     key={index}
                     nickName={rank.nickname}
                     profit={rank.profit.toFixed(2)}
-                    total={rank.yield}
+                    total={rank.yield + SEED_MONEY}
                     rank={rank.rank}
                   />
                 );
