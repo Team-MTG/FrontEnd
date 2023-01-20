@@ -53,7 +53,7 @@ export default function Result() {
       <button
         className="bg-[url('../src/assets/rankBtn.svg')] -translate-y-5"
         onClick={() => {
-          navigate('/rankings');
+          navigate('/rankings', { replace: true });
         }}
       >
         <img src={rankBtn} />

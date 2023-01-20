@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
+import { totalUserCountState } from './info';
 import { userRankState } from './user';
 
 const pageNum = atom({
@@ -29,7 +30,7 @@ const rankingsState = atom({
         return null;
       }
       const res = await axios.get(`${import.meta.env.VITE_API}/api/rankings`, {
-        params: { start: 1 },
+        params: { start: 1, end: get(totalUserCountState) },
       });
       const rankings = res.data;
       console.log(rankings);

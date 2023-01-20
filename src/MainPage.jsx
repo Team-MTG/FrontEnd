@@ -5,7 +5,7 @@ import { MAX_PHASE, URL_GITHUB, URL_NOTION } from './config';
 import { totalStockCountState, totalUserCountState } from './atoms/info';
 import LOGO from './assets/logo.png';
 import BARCODE from './assets/barcode.png';
-import { gameSeedState, roundLogState } from './atoms/game';
+import { gameRoundState, gameSeedState, roundLogState } from './atoms/game';
 import genSeeds from './utils/genSeeds';
 
 function MainPage() {
@@ -15,6 +15,7 @@ function MainPage() {
   const setGameSeeds = useSetRecoilState(gameSeedState);
   const resetBalance = useResetRecoilState(userBalanceState);
   const resetRoundLog = useResetRecoilState(roundLogState);
+  const resetRound = useResetRecoilState(gameRoundState);
   const totalUserCount = useRecoilValue(totalUserCountState);
 
   return (
@@ -33,7 +34,7 @@ function MainPage() {
           <input
             className="text-center text-lg placeholder:text-xs w-full my-1 border-[1px] rounded-full border-gray-700 border-solid"
             type="text"
-            maxLength="10"
+            maxLength="4"
             placeholder="이름을 입력하세요"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
@@ -46,6 +47,7 @@ function MainPage() {
           onClick={(e) => {
             e.preventDefault();
             setGameSeeds(genSeeds(MAX_PHASE, stockCount));
+            resetRound();
             resetBalance();
             resetRoundLog();
             navigate('/game');
@@ -61,7 +63,7 @@ function MainPage() {
       <footer className="flex flex-row text-sm mt-2 ml-4">
         <div>
           <img alt="이것은 바코드다." src={BARCODE} />
-          <nav className="font-bold text-[#757575]">
+          {/* <nav className="font-bold text-[#757575]">
             <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
               Team MTG
             </a>
@@ -76,7 +78,7 @@ function MainPage() {
             <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
               Github
             </a>
-          </nav>
+          </nav> */}
         </div>
         <div className="ml-2 mt-1 text-center font-tn">
           <p className="text-xl">

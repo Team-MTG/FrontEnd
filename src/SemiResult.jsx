@@ -45,7 +45,7 @@ export default function SemiResult() {
       <div className="h-28"></div>
       <div className="font-tn text-3xl leading-none">{currStock.stockName}</div>
       <div className="font-sc text-base leading-none font-medium">
-        수익률 {location.state.profit.toFixed(2)}%
+        수익률 {(location.state.profit * 100).toFixed(2)}%
       </div>
       <div className="font-sc text-sm leading-none font-medium mt-3">다른 사람들은...</div>
       <div className="font-sc text-sm align-text-bottomfont-medium">
@@ -112,10 +112,10 @@ export default function SemiResult() {
             },
           ]);
           if (round + 1 === MAX_PHASE) {
-            navigate('/result');
+            navigate('/result', { replace: true });
           } else {
             setRound((prev) => prev + 1);
-            navigate('/game');
+            navigate('/game', { replace: true });
           }
         }}
       >
