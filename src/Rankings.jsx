@@ -13,6 +13,7 @@ import Loading from './Loading';
 import prettyKorNum from './utils/prettyKorNum';
 
 function RankItem({ nickname, profit, total, rank }) {
+  console.log(rank, nickname, profit, total);
   return (
     <div
       className={
@@ -48,6 +49,7 @@ function Rankings() {
   const loadable = useRecoilValueLoadable(rankingsState);
 
   useEffect(() => {
+    console.log(rankings);
     setList((prevList) => [...prevList, ...rankings]); //변한 아톰 값을 리스트에 추가해서 보여주기
     setIsLoaded(true);
   }, [pageCount, rankings]);

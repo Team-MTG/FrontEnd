@@ -94,10 +94,10 @@ export default function SemiResult() {
             },
           ]}
           colors={['#EF3C3C', '#5A75E5', '#000000']}
-          width={currStock.datas.length * 20} //테스트 용
+          width={240} //테스트 용
           margin={{ top: 30, right: 25, bottom: 40, left: 50 }}
           pointSymbol={customPoint}
-          pointSize={28}
+          pointSize={14}
         />
       </div>
       <button
