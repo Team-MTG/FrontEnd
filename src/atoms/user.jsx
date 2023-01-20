@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 import { SEED_MONEY } from '../config';
-import { gameOverState } from './game';
+import { roundLogState } from './game';
 
 const userNameState = atom({
   key: 'userNameState',
@@ -14,16 +14,21 @@ const userRankState = atom({
   default: selector({
     key: 'userRankState/Default',
     get: async ({ get }) => {
-      return 1;
-      if (get(gameOverState) === false || get(userNameState) === '') {
+      const roundLog = get(roundLogState);
+      const userName = get(userNameState);
+      const body = {
+        nickname: userName,
+        totalYield: get(userBalanceState) - SEED_MONEY,
+        totalProfit: get(userRateState) * 100,
+        gameInfo: roundLog,
+      };
+      console.log(body);
+      if (userName === '') {
         throw new Error('비정상적인 Ranking 등록');
       }
-      const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, {
-        name: get(userNameState),
-        totalCash: get(userCashState),
-        rate: get(userRateState) * 100,
-      });
-      return res.data.rank;
+      const res = await axios.post(`${import.meta.env.VITE_API}/api/rankings`, body);
+      console.log(res.data);
+      return res.data;
     },
   }),
 });

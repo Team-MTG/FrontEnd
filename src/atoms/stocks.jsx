@@ -6,7 +6,7 @@ const stockState = selector({
   key: 'stockState',
   get: async ({ get }) => {
     const gameSeeds = get(gameSeedState);
-    if (gameSeeds === null) throw Error('올바른 시드가 아닙니다.');
+    if (gameSeeds === null) throw new Error('올바른 시드가 아닙니다.');
     const {
       data: { stockAverages, stockPrices },
     } = await axios.get(`${import.meta.env.VITE_API}/api/stocks`, {

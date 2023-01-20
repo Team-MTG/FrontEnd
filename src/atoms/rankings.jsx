@@ -25,21 +25,14 @@ const rankingsState = atom({
   default: selector({
     key: 'rankingsState/Default',
     get: async ({ get }) => {
-      return [
-        {
-          nickname: 'n',
-          ranking: 1,
-          profit: 1.2,
-          totalYield: 999,
-        },
-      ];
       if (get(userRankState) === 0) {
         return null;
       }
-      const res = await axios.get(
-        `${import.meta.env.VITE_API}/api/rankings/${encodeURIComponent(get(pageNum))}`
-      );
+      const res = await axios.get(`${import.meta.env.VITE_API}/api/rankings`, {
+        params: { start: get(pageNum) },
+      });
       const rankings = res.data;
+      console.log(rankings);
       return rankings;
     },
   }),

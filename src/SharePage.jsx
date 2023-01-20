@@ -8,14 +8,14 @@ import { userBalanceState, userNameState, userRankState, userRateState } from '.
 import replayBtn from './assets/replayBtn.svg';
 
 function RankItem({ nickName, profit, total, rank }) {
-  const [st, setSt] = useState('w-full bg-zinc-500 h-[60px] p-2 flex');
-
-  if (rank % 2 != 0) {
-    setSt('w-full bg-zinc-700 h-[60px] p-2 flex');
-  }
-
   return (
-    <div className={st}>
+    <div
+      className={
+        rank % 2 === 0
+          ? 'w-full bg-zinc-500 h-[60px] p-2 flex'
+          : 'w-full bg-zinc-700 h-[60px] p-2 flex'
+      }
+    >
       <p className="basis-1/5 ml-2 text-white">{rank}위</p>
       <p className="basis-1/5 ml-2 text-amber-300">{nickName}</p>
       <div className="basis-1/2 grid justify-items-end text-white">
@@ -28,9 +28,7 @@ function RankItem({ nickName, profit, total, rank }) {
 
 function SharePage() {
   const navigate = useNavigate();
-
-  let params = useParams();
-
+  const params = useParams();
   const [userName, setUserName] = useRecoilState(userNameState);
 
   useEffect(() => {
