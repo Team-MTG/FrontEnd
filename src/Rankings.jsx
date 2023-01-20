@@ -12,8 +12,9 @@ import { useRef } from 'react';
 import axios from 'axios';
 import Loading from './Loading';
 import prettyKorNum from './utils/prettyKorNum';
+import { totalUserCountState } from './atoms/info';
 
-function RankItem({ nickname, profit, total, rank }) {
+function RankItem({ nickName, profit, total, rank }) {
   return (
     <div
       className={
@@ -23,7 +24,7 @@ function RankItem({ nickname, profit, total, rank }) {
       }
     >
       <p className="basis-1/5 ml-2 text-white">{rank}위</p>
-      <p className="basis-1/5 ml-2 text-amber-300">{nickname}</p>
+      <p className="basis-1/5 ml-2 text-amber-300">{nickName}</p>
       <div className="basis-1/2 grid justify-items-end text-white">
         <div>{prettyKorNum(total)}원</div>
         <div className="text-sm">{profit} %</div>
@@ -36,31 +37,33 @@ function Rankings() {
   const rankings = useRecoilValue(rankingsState);
   const userCash = useRecoilValue(userBalanceState);
   const userRank = useRecoilValue(userRankState);
+  const rankMaxCount = useRecoilValue(totalUserCountState);
 
   const [pageCount, setPage] = useRecoilState(pageNum);
-  const [list, setList] = useRecoilState(rankList);
+  const [list, setList] = useState(rankings);
   const navigate = useNavigate();
 
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   //Suspense 대체 위해서
   const loadable = useRecoilValueLoadable(rankingsState);
 
-  useEffect(() => {
-    setList((prevList) => [...prevList, ...rankings]); //변한 아톰 값을 리스트에 추가해서 보여주기
-    setIsLoaded(true);
-  }, [pageCount, rankings]);
+  // useEffect(() => {
+  //   console.log(rankings);
+  //   setList((prevList) => [...prevList, ...rankings]); //변한 아톰 값을 리스트에 추가해서 보여주기
+  //   setIsLoaded(false);
+  // }, [pageCount, rankings]);
 
-  useEffect(() => {
-    setList(rankings);
-  }, []);
+  // const [_, setRef] = useIntersect(async (entry, observer) => {
+  //   observer.unobserve(entry.target);
+  //   setIsLoaded(false);
 
-  const [_, setRef] = useIntersect(async (entry, observer) => {
-    observer.unobserve(entry.target);
-    setIsLoaded(false);
-    setPage((prev) => prev + 1); //페이지가 변하면 알아서 아톰으로 값 불러옴
-    observer.observe(entry.target);
-  }, {});
+  //   setPage((prev) => {
+  //     if (prev === Math.floor(rankMaxCount / 30)) return prev;
+  //     return prev + 1;
+  //   }); //페이지가 변하면 알아서 아톰으로 값 불러옴
+  //   observer.observe(entry.target);
+  // }, {});
 
   //현재 주소 가져옴
   //const url = encodeURI(window.location.href);
@@ -76,7 +79,12 @@ function Rankings() {
         <div className="relative bg-[url('../src/assets/bg-rankpage.svg')] bg-no-repeat bg-center h-[38rem] mt-[8vh] max-w-sm mx-auto flex flex-col items-center">
           <button
             className="absolute pointer-events-auto right-14 bg-[url('../src/assets/shareBtn.svg')]"
-            onClick={copyURL}
+            onClick={() => {
+              const shareUrl = `${window.location.host}/share/${encodeURIComponent(
+                userRank.sharedNumber
+              )}`;
+              navigator.clipboard.writeText(shareUrl).then(() => alert('공유링크 복사 완료!'));
+            }}
           >
             <img src={shareBtn} />
           </button>
@@ -101,23 +109,27 @@ function Rankings() {
               </div>
             </div>
             <div className="h-[310px] overflow-y-scroll mt-1">
-              {list.map((rank, index) => (
-                <RankItem
-                  key={index}
-                  nickName={rank.nickname}
-                  profit={rank.profit.toFixed(2)}
-                  total={rank.yield}
-                  rank={rank.rank}
-                />
-              ))}
+              {list.map((rank, index) => {
+                console.log('rank', rank);
+                return (
+                  <RankItem
+                    key={index}
+                    nickName={rank.nickname}
+                    profit={rank.profit.toFixed(2)}
+                    total={rank.yield}
+                    rank={rank.rank}
+                  />
+                );
+              })}
               {isLoaded && (
-                <div className="mt-3" ref={setRef}>
-                  Loading...
-                </div>
+                // <div className="mt-3" ref={setRef}>
+                //   Loading...
+                // </div>
+                <div className="mt-3">Loading...</div>
               )}
             </div>
           </div>
-          <button className="mt-1" onClick={() => navigate('/')}>
+          <button className="mt-1" onClick={() => navigate('/', { replace: true })}>
             <img src={replayBtn} />
           </button>
         </div>
