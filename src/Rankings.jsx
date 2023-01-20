@@ -80,7 +80,7 @@ function Rankings() {
           <button
             className="absolute pointer-events-auto right-14 bg-[url('../src/assets/shareBtn.svg')]"
             onClick={() => {
-              const shareUrl = `${window.location.host}/share/${encodeURIComponent(
+              const shareUrl = `${window.location.origin}/share/${encodeURIComponent(
                 userRank.sharedNumber
               )}`;
               navigator.clipboard.writeText(shareUrl).then(() => alert('공유링크 복사 완료!'));
