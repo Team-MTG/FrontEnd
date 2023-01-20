@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState 
 import prettyKorNum from './utils/prettyKorNum';
 import rankBtn from './assets/rankBtn.svg';
 import { SEED_MONEY } from './config';
-import { userBalanceState, userNameState, userRateState } from './atoms/user';
+import { userBalanceState, userNameState, userRankState, userRateState } from './atoms/user';
 
 export default function Result() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export default function Result() {
   const userName = useRecoilValue(userNameState);
   const totalProfit = useRecoilValue(userRateState) * 100;
   const totalBalance = useRecoilValue(userBalanceState);
+  const userRankPost = useRecoilValue(userRankState);
   const totalYield = totalBalance - SEED_MONEY;
 
   /*상세 결과 컴포넌트화*/
@@ -53,7 +54,12 @@ export default function Result() {
       <button
         className="bg-[url('../src/assets/rankBtn.svg')] -translate-y-5"
         onClick={() => {
-          navigate('/rankings', { replace: true });
+          navigate('/rankings', {
+            replace: true,
+            state: {
+              userRank: userRankPost,
+            },
+          });
         }}
       >
         <img src={rankBtn} />

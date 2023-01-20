@@ -7,6 +7,7 @@ import LOGO from './assets/logo.png';
 import BARCODE from './assets/barcode.png';
 import { gameRoundState, gameSeedState, roundLogState } from './atoms/game';
 import genSeeds from './utils/genSeeds';
+import { useEffect } from 'react';
 
 function MainPage() {
   const navigate = useNavigate();
