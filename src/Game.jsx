@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { gameRoundState, roundLogState } from './atoms/game';
 import { stockState } from './atoms/stocks';
 import { userBalanceState } from './atoms/user';
+import { SEED_MONEY } from './config';
 import useTimer from './hooks/useTimer';
 import prettyKorNum from './utils/prettyKorNum';
 
@@ -460,7 +461,7 @@ export default function Game({ maxSec, maxPhase }) {
         {round <= 4 && <p className="absolute z-20 top-3 left-[17.2rem] text-lg">?</p>}
         <GameRoundBar className="relative z-10" round={round} roundLog={roundLog} />
         <div className="bg-[url('../src/assets/timerCurtain.svg')] h-[60px] w-[43px] absolute top-[94px] text-center">
-          <p className="mt-3 text-lg text-white">{timer.time}</p>
+          <p className="mt-3 text-lg text-white">{tick.time}</p>
         </div>
       </header>
       <div className="text-center h-80 mt-4">
@@ -490,9 +491,9 @@ export default function Game({ maxSec, maxPhase }) {
           <span className="text-base">총자산</span>
           <p
             className={
-              (currData.price - avgPrice) * holdings == 0
+              balance + currData.price * holdings === SEED_MONEY
                 ? 'text-3xl'
-                : (currData.price - avgPrice) * holdings < 0
+                : balance + currData.price * holdings < SEED_MONEY
                 ? 'text-3xl text-[#5A75E5]'
                 : 'text-3xl text-[#EA4B4B]'
             }
@@ -535,6 +536,7 @@ export default function Game({ maxSec, maxPhase }) {
   ) : (
     <Navigate
       to="/game/result"
+      replace={true}
       state={{
         stockName: currStock.stockName,
         avgProfit: currStock.avgProfit,
