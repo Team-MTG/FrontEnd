@@ -10,13 +10,19 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { gameRoundState, roundLogState } from './atoms/game';
 import { MAX_PHASE } from './config';
 import { stockState } from './atoms/stocks';
+import { useEffect, useState } from 'react';
 
 export default function SemiResult() {
   const navigate = useNavigate();
   const location = useLocation();
   const [round, setRound] = useRecoilState(gameRoundState);
+  const [enableBtn, setEnableBtn] = useState(false);
   const setRoundLog = useSetRecoilState(roundLogState);
   const currStock = useRecoilValue(stockState)[round];
+
+  useEffect(() => {
+    setTimeout(() => setEnableBtn(true), 1000);
+  }, []);
 
   /* 포인트 찍기 */
   const customPoint = ({ size, color, borderWidth, borderColor, datum }) => {
@@ -102,6 +108,7 @@ export default function SemiResult() {
       </div>
       <button
         className="mb-1"
+        disabled={!enableBtn}
         onClick={() => {
           setRoundLog((prevLog) => [
             ...prevLog,

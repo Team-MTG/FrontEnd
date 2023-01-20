@@ -414,7 +414,6 @@ export default function Game({ maxSec, maxPhase }) {
 
   // game info
   const round = useRecoilValue(gameRoundState);
-  const timer = useTimer(maxSec, 1000);
   const currStock = useRecoilValue(stockState)[round];
   const tick = useTimer(currStock.datas.length - 1, (maxSec * 1000) / currStock.datas.length);
   const currData = currStock.datas[currStock.datas.length - 1 - tick.time];
