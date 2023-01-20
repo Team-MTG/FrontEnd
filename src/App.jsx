@@ -88,7 +88,7 @@ function App() {
         }
       />
       <Route
-        path="/share/:username"
+        path="/share/:sharedNumber"
         element={
           <ErrorBoundary
             fallback={<Error msg={`에러가 발생했습니다. 잠시 후 메인 페이지로 이동합니다.`} />}
@@ -115,6 +115,7 @@ function App() {
       />
       <Route path="/dev" element={<Loading msg="로딩중..." />} />
       <Route path="*" element={<NotFound msg="잘못된 주소입니다." />} />
+      <Route path="/rank" element={<Rankings />} />
     </Routes>
   );
 }
