@@ -432,7 +432,6 @@ export default function Game({ maxSec, maxPhase }) {
       setBalance((prevBalance) => prevBalance + currData.price * holdings);
       setHoldings(0);
       setTradeLog(({ sell, buy }) => {
-        console.log('sell');
         return { sell: [...sell, currData.date], buy };
       });
     }
