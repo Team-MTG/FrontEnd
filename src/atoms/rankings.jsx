@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
-import { totalUserCountState } from './info';
-import { userRankState } from './user';
 
 const pageNum = atom({
   key: 'pageNum',

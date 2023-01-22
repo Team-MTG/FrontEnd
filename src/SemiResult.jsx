@@ -55,7 +55,7 @@ export default function SemiResult() {
       </div>
       <div className="font-sc text-sm leading-none font-medium mt-3">다른 사람들은...</div>
       <div className="font-sc text-sm align-text-bottomfont-medium">
-        {currStock.avgProfit.toFixed(2)}%
+        {(currStock.avgProfit * 100).toFixed(2)}%
       </div>
       <div className="w-9/12 h-60 overflow-x-auto mb-1">
         <ResponsiveLine

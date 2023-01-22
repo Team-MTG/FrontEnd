@@ -119,7 +119,6 @@ function Rankings() {
             </div>
             <div className="h-[310px] overflow-y-scroll mt-1 no-scrollbar">
               {list.map((rank, index) => {
-                console.log('rank', rank);
                 return (
                   <RankItem
                     key={index}

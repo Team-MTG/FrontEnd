@@ -9,7 +9,7 @@ const totalStockCountState = atom({
       const {
         headers: { 'x-total-count': stockCount },
       } = await axios.head(`${import.meta.env.VITE_API}/api/stocks`);
-      if (stockCount === undefined) throw Error('네트워크 오류');
+      if (stockCount === undefined) throw new Error('네트워크 오류');
       return stockCount;
     },
   }),
