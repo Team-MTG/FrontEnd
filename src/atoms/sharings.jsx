@@ -12,11 +12,14 @@ const sharingsState = selectorFamily({
   get:
     (shareNum) =>
     async ({ get }) => {
-      const res = await axios.get(
+      const { data: sharings } = await axios.get(
         `${import.meta.env.VITE_API}/api/sharing?sharedNumber=${encodeURIComponent(shareNum)}`
       );
-      const sharings = res.data;
-      return sharings;
+      const { data: rankings } = await axios.get(`${import.meta.env.VITE_API}/api/rankings`, {
+        params: { start: 1, end: 30 },
+      });
+
+      return { ...sharings, rankings };
     },
 });
 
