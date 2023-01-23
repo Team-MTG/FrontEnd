@@ -37,20 +37,22 @@ function RankItem({ nickname, profit, total, rank }) {
 function SharePage() {
   const navigate = useNavigate();
 
-  let params = useParams();
+  const params = useParams();
 
-  const sharing = useRecoilValue(sharingsState(params.sharedNumber));
+  const { nickname, myRank, myProfit, myYield, rankings } = useRecoilValue(
+    sharingsState(params.sharedNumber)
+  );
 
-  const [list, setList] = useRecoilState(shareList);
+  // const [list, setList] = useRecoilState(shareList);
 
-  const myNickname = sharing.nickname;
-  const [myRank, setMyRank] = useState(sharing.myRank);
-  const [myProfit, setMyProfit] = useState(sharing.myProfit);
-  const [myYield, setMyYield] = useState(sharing.myYield);
+  // const myNickname = sharing.nickname;
+  // const [myRank, setMyRank] = useState(sharing.myRank);
+  // const [myProfit, setMyProfit] = useState(sharing.myProfit);
+  // const [myYield, setMyYield] = useState(sharing.myYield);
 
-  useEffect(() => {
-    setList(sharing.otherRanking);
-  }, []);
+  // useEffect(() => {
+  //   setList(sharing.rankings);
+  // }, []);
 
   //게임하기 버튼 클릭 시
   const gamePlay = () => {
@@ -62,7 +64,7 @@ function SharePage() {
       <div className=" top-0 left-0 border-[1px] border-gray-700  w-[280px] h-[70px]  mt-[3vh] p-1 bg-white">
         <div className="p-1 w-full h-full bg-amber-300">
           <p className="ml-2">
-            {myNickname}&nbsp;님의 순위 : {myRank}위
+            {nickname}&nbsp;님의 순위 : {myRank}위
           </p>
           <div className="flex ml-2">
             <p>
@@ -82,7 +84,7 @@ function SharePage() {
           </div>
         </div>
         <div className="h-[19.5rem] overflow-y-scroll mt-1 no-scrollbar">
-          {list.map((rank) => (
+          {rankings.map((rank) => (
             <RankItem
               key={rank.idx}
               nickname={rank.nickname}
