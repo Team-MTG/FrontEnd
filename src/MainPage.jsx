@@ -64,22 +64,32 @@ function MainPage() {
       <footer className="flex flex-row text-sm mt-2 ml-4">
         <div>
           <img alt="이것은 바코드다." src={BARCODE} />
-          {/* <nav className="font-bold text-[#757575]">
-            <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
-              Team MTG
-            </a>
+          <nav className="font-bold text-[#757575]">
             <a
-              className="mx-4"
+              className="ml-4"
               href={URL_NOTION}
               target="_blank"
               rel="external noreferrer noopener"
             >
-              Notion
+              TEAM
             </a>
-            <a href={URL_GITHUB} target="_blank" rel="external noreferrer noopener">
-              Github
+            <a
+              className="ml-[35px]"
+              href={URL_NOTION}
+              target="_blank"
+              rel="external noreferrer noopener"
+            >
+              MTG
             </a>
-          </nav> */}
+            <a
+              className="ml-[22px]"
+              href={URL_NOTION}
+              target="_blank"
+              rel="external noreferrer noopener"
+            >
+              NOTION
+            </a>
+          </nav>
         </div>
         <div className="ml-2 mt-1 text-center font-tn">
           <p className="text-xl">
